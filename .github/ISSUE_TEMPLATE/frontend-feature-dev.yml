@@ -6,6 +6,7 @@ body:
   - type: dropdown
     attributes:
       label: 📌 Type of feature
+      description: 구현하려는 feature를 선택해주세요.
       options:
         - Component
         - Page
