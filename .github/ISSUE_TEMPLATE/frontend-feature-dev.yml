@@ -1,0 +1,39 @@
+name: 📘 [Frontend] New feature development
+description: 새로운 feature를 개발합니다
+title: "[Feature] (ex. 메인 페이지 구현/API 연결)"
+labels: ["feat: frontend"]
+body:
+  - type: dropdown
+    attributes:
+      label: 📌 Type of feature
+      options:
+        - Component
+        - Page
+        - Connect API
+        - Others
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: ✏️ Describe the feature
+      description: 구현하려는 feature를 자세하게 설명해주세요.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🎨 Feature Image
+      description: 구현하려는 feature의 Image를 첨부해주세요. api 연결의 경우 사용하는 페이지 image를 첨부해주세요.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🏷 Required Components
+      description: 해당 컴포넌트를 사용할 때 필요한 다른 component list를 작성하고, 관련된 issue number를 적어주세요. (없다면 작성하지 않으셔도 됩니다.)
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 🏷 Required APIs
+      description: API 연결 시 필요한 api list에 대해 설명해주세요. (없다면 작성하지 않으셔도 됩니다.)
+    validations:
+      required: false
