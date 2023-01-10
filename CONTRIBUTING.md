@@ -7,6 +7,7 @@ SKKUDING에 contribution 해주셔서 감사합니다! 이 글은 contribute 시
 ### Backend
 - Prerequisites
   - PostgreSQL 15.x
+  - Node.js 18.x
 - DB 설정
   - User: postgres
   - pw: 1234
