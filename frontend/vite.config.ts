@@ -14,7 +14,7 @@ export default defineConfig({
     icons({ autoInstall: true }),
 
     pages({
-      pagesDir: [],
+      pagesDir: [{ dir: "src/pages", baseRoute: "" }],
     }),
   ],
   resolve: {
