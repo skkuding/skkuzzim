@@ -5,7 +5,12 @@ SKKUDING에 contribution 해주셔서 감사합니다! 이 글은 contribute 시
 ## 개발 환경 설정 ⚙️
 
 ### Backend
-// TODO
+- Prerequisites
+  - PostgreSQL 15.x
+- DB 설정
+  - User: postgres
+  - pw: 1234
+  - db: skkuzzim
 
 ## Issue(ticket) 🎫
 
