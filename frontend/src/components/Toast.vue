@@ -6,11 +6,12 @@ defineProps<{
   msg: string;
 }>();
 library.add(faCircleCheck);
+import iconRegularCircleCheck from '~icons/fa6-regular/circle-check'
 </script>
 
 <template>
   <div class="toastWrapper">
-    <font-awesome-icon icon="fa-solid fa-circle-check" />
+    <iconRegularCircleCheck />
     <div class="toastMessage">{{ msg }} 완료되었습니다!</div>
   </div>
 </template>
