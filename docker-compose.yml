@@ -1,0 +1,10 @@
+version: '3'
+services:
+  toyproject-dev-db:
+    image: postgres:15-alpine
+    ports:
+      - 5439:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: skkuzzim
