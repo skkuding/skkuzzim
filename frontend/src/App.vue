@@ -1,29 +1,21 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
+import Button from "./components/Button.vue";
 import HelloWorld from "./components/HelloWorld.vue";
+import IconRegularClock from '~icons/fa6-regular/clock'
+
 </script>
 
 <template>
-  <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
+  <Button color="green">수정</Button>
+  <Button color="red">삭제</Button>
+  <Button color="gray">오늘</Button>
+  <Button color="pink">돌아가기</Button>
+  <Button color="white">+ 추가</Button>
+  <Button color="green">+ 생성</Button>
+  <Button color="white">&lt &nbsp지난 주</Button>
+  <Button color="white"><IconRegularClock/>&nbsp&nbsp1/23 (월) 12:00 ~ 13:00</Button>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
 </template>
 
 <style scoped>
