@@ -16,10 +16,10 @@ const props = defineProps<{
       class="letters"
       v-if="startTime && endTime ? `${{ year }} year` : `${{ month }} month`"
     ></div> -->
-    <div class="letters" v-if="startTime && endTime">
-      `{{ month }}월 {{ day }}일 {{ startTime }} ~ {{ endTime }}`
+    <div class="letters" v-if="startTime && endTime && !year && day">
+      {{ month }}월 {{ day }}일 {{ startTime }} ~ {{ endTime }}
     </div>
-    <div class="letters" v-if="year">{{ year }}년 {{ month }}월</div>
+    <div class="letters" v-if="year && !day && !startTime && !endTime">{{ year }}년 {{ month }}월</div>
     <div>
       <a href="https://github.com/skkuding/skkuzzim" target="_blank">
         <IconBrandsGithub class="letters" />
