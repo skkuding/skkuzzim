@@ -6,12 +6,16 @@ SKKUDING에 contribution 해주셔서 감사합니다! 이 글은 contribute 시
 
 ### Backend
 - Prerequisites
-  - PostgreSQL 15.x
-  - Node.js 18.x
-- DB 설정
-  - User: postgres
-  - pw: 1234
-  - db: skkuzzim
+  - Node.js >=18
+
+- DB Setting
+  - docker-compose.yml이 있는 위치에서 `docker compose up`을 실행합니다.
+  - 위 명령어로 postgreSQL 15 서버를 컨테이너로 띄워 접속할 수 있습니다.
+  - `docker compose down`으로 컨테이너를 내릴 수 있으나, DB 안의 데이터가 다 지워지니 주의하세요.
+  - `npx prisma studio`로 간단한 데이터는 DB에 직접 CRUD할 수 있습니다.
+  - 실행중인 컨테이너는 vscode docker extension을 설치하시면 쉽게 확인하실 수 있습니다.
+
+
 
 ## Issue(ticket) 🎫
 
