@@ -4,15 +4,16 @@
 
 <template>
   <!-- TODO: 헤더 컴포넌트 추가 -->
-  <main class="app-container">
+  <main class="wrapper">
     <router-view />
   </main>
 </template>
 
 <style scoped>
-.app-container {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+.wrapper {
+  width: 100%;
+  max-width: 80rem;
+  padding-left: 5rem;
+  padding-right: 5rem;
 }
 </style>

@@ -24,7 +24,9 @@ body {
 
 #app {
   min-height: 100%;
-  margin: 0 auto;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
 a {
