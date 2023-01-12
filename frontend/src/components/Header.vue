@@ -1,18 +1,25 @@
 <script setup lang="ts">
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-defineProps<{
-  year: number;
+import IconBrandsGithub from '~icons/fa6-brands/github';
+const props = defineProps<{
+  year?: number;
   month: number;
+  day?: number;
+  startTime?: number;
+  endTime?: number;
 }>();
-library.add(faGithub);
-import IconBrandsGithub from '~icons/fa6-brands/github'
+// console.log("time is", props.month);
 </script>
 
 <template>
   <div class="headerWrapper">
-    <div class="letters">{{ year }}년 {{ month }}월</div>
+    <!-- <div
+      class="letters"
+      v-if="startTime && endTime ? `${{ year }} year` : `${{ month }} month`"
+    ></div> -->
+    <div class="letters" v-if="startTime && endTime">
+      `{{ month }}월 {{ day }}일 {{ startTime }} ~ {{ endTime }}`
+    </div>
+    <div class="letters" v-if="year">{{ year }}년 {{ month }}월</div>
     <div>
       <a href="https://github.com/skkuding/skkuzzim" target="_blank">
         <IconBrandsGithub class="letters" />

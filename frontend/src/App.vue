@@ -10,11 +10,17 @@ import Toast from "./components/Toast.vue";
     <div>
       <Toast msg="삭제가" />
       <div id="main">Main</div>
+      <button id="test">button</button>
     </div>
   </div>
 </template>
 
 <style scoped>
+#test {
+  padding: 2px;
+  background-color: red;
+  color: white;
+}
 .wrapper {
   box-sizing: border-box;
   margin: 0;
