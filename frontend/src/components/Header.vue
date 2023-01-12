@@ -28,6 +28,7 @@ library.add(faGithub);
   align-items: center;
   height: 80px;
   position: sticky;
+  top:0;
   width: 100%;
   margin: 0;
 }

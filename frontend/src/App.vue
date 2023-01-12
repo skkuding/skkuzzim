@@ -9,25 +9,30 @@ import Toast from "./components/Toast.vue";
     <Header :year="2023" :month="1" class="header"></Header>
     <div>
       <Toast msg="삭제가" />
-      <div>Main</div>
+      <div id="main">Main</div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.header {
-  width: 100%;
-}
 .wrapper {
   box-sizing: border-box;
-  width: 1640px;
   margin: 0;
   padding: 0;
   height: 100%;
+  width: 100%;
 }
-* {
+body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  overflow: scroll;
+}
+#main {
+  background-color: antiquewhite;
+  padding: 10rem;
+  height: 5000px;
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -21,7 +21,7 @@ library.add(faCircleCheck);
   background-color: #8dc63f;
   padding: 10px;
   width: 250px;
-  border-radius: 100px;
+  border-radius: 20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
