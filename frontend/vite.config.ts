@@ -8,15 +8,7 @@ import icons from "unplugin-icons/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-
-    icons({ autoInstall: true }),
-
-    pages({
-      pagesDir: [],
-    }),
-  ],
+  plugins: [vue(), icons({ autoInstall: true }), pages()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
