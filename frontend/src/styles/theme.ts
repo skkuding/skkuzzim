@@ -1,11 +1,11 @@
 export const COLOR = {
-  green: "#8dc63f",
-  red: "#c63f3f",
-  pink: "#ff6663",
   blue: "#3f9dc6",
-  yellow: "#feb144",
-  "light-gray": "#d9d9d9",
+  "dark-red": "#c63f3f",
   gray: "#808080",
+  green: "#8dc63f",
+  "light-gray": "#d9d9d9",
+  red: "#ff6663",
+  yellow: "#feb144",
 };
 
 export const FONT_SIZE = {
