@@ -2,7 +2,6 @@
 import { computed } from "vue";
 
 const props = defineProps<{
-  name: string;
   values: string[];
   modelValue: string;
 }>();
@@ -24,7 +23,7 @@ const model = computed({
 <template>
   <div class="wrapper">
     <label v-for="value in values" :key="value">
-      <input type="radio" :name="name" :value="value" v-model="model" />
+      <input type="radio" name="club" :value="value" v-model="model" />
       <span class="checkmark">
         <svg
           v-if="modelValue === value"
