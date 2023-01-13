@@ -1,12 +1,34 @@
-import { Controller,Get,Query } from '@nestjs/common';
-import { info_per_time } from './reservation.dto';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 
 @Controller('reservation')
 export class ReservationController {
-    constructor(private reservationService: ReservationService) {}
-    @Get()
-    total_info(@Query('start_date') start_date:Date, @Query('end_date') end_date:Date):info_per_time{
-        return this.reservationService.total_view(start_date,end_date);
-    }
+  constructor(private readonly reservationService: ReservationService) {}
+
+  @Get()
+  async getReservation(
+    @Query('startTime') startTime: string,
+    @Query('endTime') endTime: string,
+  ) {
+    return await this.reservationService.getAllReservation(startTime, endTime);
+  }
+
+  @Post()
+  async createReservation(
+    @Body('name') name: string,
+    @Body('club') club: string,
+    @Body('startTime') startTime: string,
+    @Body('endTime') endTime: string,
+    @Body('purpose') purpose: string,
+    @Body('member') member: string[],
+  ) {
+    await this.reservationService.createReservation(
+      name,
+      club,
+      startTime,
+      endTime,
+      purpose,
+      member,
+    );
+  }
 }

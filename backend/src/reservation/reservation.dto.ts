@@ -8,10 +8,10 @@ export class info_per_time{
 
 export class info_per_reservation{
     id: Number;
-    name: String;
-    club: String;
+    name: string;
+    club: string;
     startTime: Date;
     endTime: Date;
-    purpose: String;
-    member: Array<String>;
+    purpose: string;
+    member: Array<string>;
 }
