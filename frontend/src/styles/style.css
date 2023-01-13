@@ -33,3 +33,7 @@ body {
 a {
   text-decoration: none;
 }
+
+input {
+  font-family: "Manrope", "Noto Sans KR";
+}
