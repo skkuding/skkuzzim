@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import IconCircle from "~icons/fa6-regular/circle";
+import IconCircleDot from "~icons/fa6-regular/circle-dot";
 
 const props = defineProps<{
   values: string[];
@@ -24,29 +26,8 @@ const model = computed({
   <div class="wrapper">
     <label v-for="value in values" :key="value">
       <input type="radio" name="club" :value="value" v-model="model" />
-      <span class="checkmark">
-        <svg
-          v-if="modelValue === value"
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="6" cy="6" r="5.5" fill="white" stroke="black" />
-          <circle cx="6.0001" cy="6" r="2.4" fill="black" />
-        </svg>
-        <svg
-          v-else
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="6" cy="6" r="5.5" fill="white" stroke="black" />
-        </svg>
-      </span>
+      <IconCircleDot v-if="modelValue === value" />
+      <IconCircle v-else />
       <span>{{ value }}</span>
     </label>
   </div>
@@ -75,9 +56,7 @@ input {
   z-index: 1;
   cursor: inherit;
 }
-.checkmark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+svg {
+  width: 14px;
 }
 </style>
