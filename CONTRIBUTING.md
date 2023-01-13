@@ -4,6 +4,9 @@ SKKUDING에 contribution 해주셔서 감사합니다! 이 글은 contribute 시
 
 ## 개발 환경 설정 ⚙️
 
+### VSCODE 설정
+- Recommended vscode extension을 전부 설치해주세요.
+
 ### Backend
 - Prerequisites
   - Node.js >=18
