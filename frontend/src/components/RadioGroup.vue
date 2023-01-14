@@ -26,8 +26,8 @@ const model = computed({
   <div class="wrapper">
     <label v-for="value in values" :key="value">
       <input type="radio" name="club" :value="value" v-model="model" />
-      <IconCircleDot v-if="modelValue === value" />
-      <IconCircle v-else />
+      <IconCircleDot v-if="modelValue === value" width="14" height="14" />
+      <IconCircle v-else width="14" height="14" />
       <span>{{ value }}</span>
     </label>
   </div>
@@ -48,15 +48,12 @@ label {
 }
 input {
   position: absolute;
-  opacity: 0;
+  appearance: none;
   width: 14px;
   height: 100%;
   top: 0;
   left: 0;
   z-index: 1;
   cursor: inherit;
-}
-svg {
-  width: 14px;
 }
 </style>
