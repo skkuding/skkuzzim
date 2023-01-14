@@ -7,7 +7,7 @@ pre-commit:
   commands:
     eslint:
       glob: '*.{js,ts,vue}'
-      run: npx eslint {staged_files}
+      run: pnpm eslint {staged_files}
     prettier:
       glob: '*.{js,ts,vue,css,yaml,yml}'
-      run: npx prettier --check {staged_files}
+      run: pnpm prettier --check {staged_files}
