@@ -2,7 +2,7 @@
 import { COLOR } from '@/styles/theme'
 
 defineProps<{
-  color?: keyof typeof COLOR | 'white'
+  color?: keyof typeof COLOR
 }>()
 </script>
 
