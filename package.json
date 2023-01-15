@@ -3,6 +3,7 @@
     "preinstall": "npx only-allow pnpm -y"
   },
   "devDependencies": {
+    "@vue/eslint-config-typescript": "^11.0.0",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
     "eslint": "^8.31.0",
