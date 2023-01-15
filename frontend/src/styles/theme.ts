@@ -1,10 +1,12 @@
 export const COLOR = {
   blue: '#3f9dc6',
   'dark-red': '#c63f3f',
+  'dark-gray': '#404040',
   gray: '#808080',
   green: '#8dc63f',
   'light-gray': '#d9d9d9',
   red: '#ff6663',
+  white: '#FFFFFF',
   yellow: '#feb144'
 }
 
