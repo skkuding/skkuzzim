@@ -73,9 +73,9 @@ export class ReservationService {
               object.club === 'skkuding' ? accum + object.people : accum + 0,
             0
           ),
-          skku_d: a.reduce(
+          skkud: a.reduce(
             (accum, object) =>
-              object.club === 'skku_d' ? accum + object.people : accum + 0,
+              object.club === 'skkud' ? accum + object.people : accum + 0,
             0
           ),
           isFull:
