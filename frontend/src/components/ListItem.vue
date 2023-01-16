@@ -8,11 +8,11 @@ import IconCircle from '~icons/fa6-solid/circle'
 const props = defineProps<{
   id: number
   creator: string
-  club: string
+  club: 'skkuding' | 'skkud'
   startTime: Date
   endTime: Date
+  members: string[]
   purpose?: string
-  members?: string[]
 }>()
 
 const period = computed(() => {
@@ -27,46 +27,30 @@ const period = computed(() => {
 <template>
   <div class="list-wrapper">
     <div class="list-header">
-      <div class="" style="display: flex; justify-content: center">
-        <!-- circle -->
-        <IconCircle color="red" style="padding-right: 0.5rem" />
-
-        <!-- period -->
-        <div>{{ period }}</div>
+      <IconCircle class="circle-icon" />
+      <div class="header-center">
+        <p>{{ period }}</p>
+        <p>{{ purpose || creator }}</p>
+        <p>{{ members.length }} 명</p>
       </div>
-
-      <!-- purpose -->
-      <div style="grid-column: span 2 / span 2; margin-left: 1rem">
-        {{ purpose || creator }}
-      </div>
-
-      <!-- number of member & buttons -->
-      <div style="display: flex; align-items: center">
-        <div style="margin-right: 1rem">{{ members?.length || 0 }} 명</div>
-        <Button color="green" style="margin-right: 0.5rem">수정</Button>
+      <div class="button-box">
+        <Button color="green">수정</Button>
         <Button color="dark-red">삭제</Button>
       </div>
     </div>
-    <div class="list-content">
-      <!-- left column -->
-      <div style="text-align: end; margin-right: 2rem; row-gap: 1rem">
-        <div>소속</div>
-        <div>예약자</div>
-        <div>참가자</div>
+    <div class="list-content" v-if="members.length !== 1">
+      <div>
+        <span>소속</span>
+        <span>{{ club }}</span>
       </div>
-
-      <!-- right column -->
-      <div style="grid-column: span 3 / span 3; margin-left: 1rem">
-        <div>{{ club }}</div>
-
-        <div>{{ creator }}</div>
-
+      <div>
+        <span>예약자</span>
+        <span>{{ creator }}</span>
+      </div>
+      <div>
+        <span>참가자</span>
         <div class="member-list">
-          <span
-            v-for="member in members"
-            :key="member"
-            style="padding-right: 0.5rem"
-          >
+          <span v-for="member in members" :key="member">
             {{ member }}
           </span>
         </div>
@@ -77,26 +61,67 @@ const period = computed(() => {
 
 <style scoped>
 .list-wrapper {
-  width: fit-content;
-  min-width: 800px;
+  width: 800px;
 }
-
 .list-header {
   border: 2px solid v-bind("COLOR['light-gray']");
   border-radius: 0.5rem;
-  padding: 1rem;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 1rem 2rem;
+  display: flex;
   align-items: center;
-  /* justify-content: space-around; */
 }
-
+.header-center {
+  display: grid;
+  grid-template-columns: 3fr 3fr 1fr;
+  align-items: center;
+  flex-grow: 1;
+  margin: 0 5rem 0 3rem;
+}
+.header-center p:last-child {
+  text-align: right;
+}
+.button-box {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+}
+button {
+  width: 56px;
+  height: 30px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
 .list-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  padding: 1rem 0 1rem 9rem;
   background-color: #f9eee0;
   border-radius: 0.5rem;
-  margin-top: 0.5rem;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  padding: 1rem;
+}
+.list-content > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 6.5rem;
+  text-transform: uppercase;
+}
+
+.list-content > div > span:first-child {
+  text-align: center;
+  flex-shrink: 0;
+  flex-basis: 45px;
+}
+.member-list {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.circle-icon {
+  color: v-bind("club === 'skkuding' ? COLOR.green : COLOR.blue");
+  flex-shrink: 0;
 }
 </style>
