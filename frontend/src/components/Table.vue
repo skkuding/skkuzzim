@@ -32,11 +32,12 @@ const isSameDate = (date1: Date, date2: Date) => {
 // row header
 const DAYS = ['월', '화', '수', '목', '금', '토', '일']
 const DATE_MS = 86400000
+const today = new Date()
 const dates: Date[] = []
 for (let i = 0; i < 7; i++) {
   const date = new Date(props.startTime.getTime() + DATE_MS * i)
   dates.push(date)
-  if (isSameDate(date, new Date())) {
+  if (isSameDate(date, today)) {
     isTodayIncluded.value = true
   }
 }
