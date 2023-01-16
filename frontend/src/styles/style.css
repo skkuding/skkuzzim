@@ -8,6 +8,7 @@ html {
   margin: 0;
   position: relative;
   font-weight: normal;
+  font-family: 'Manrope', 'Noto Sans KR';
 }
 
 header {
@@ -18,7 +19,6 @@ header {
 body {
   min-width: 100%;
   background: white;
-  font-family: "Manrope", "Noto Sans KR";
   -webkit-font-smoothing: antialiased;
 }
 
