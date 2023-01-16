@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// script 코드를 작성해주세요
 import { useDateFormat } from '@vueuse/core'
 import { computed } from 'vue'
 import { COLOR } from '@/styles/theme'
