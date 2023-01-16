@@ -87,6 +87,8 @@ importers:
 
   frontend:
     specifiers:
+      '@iconify-json/fa6-regular': ^1.1.8
+      '@iconify-json/fa6-solid': ^1.1.10
       '@rushstack/eslint-patch': ^1.1.4
       '@types/jsdom': ^20.0.1
       '@types/node': ^18.11.12
@@ -116,6 +118,8 @@ importers:
       vue: 3.2.45
       vue-router: 4.1.6_vue@3.2.45
     devDependencies:
+      '@iconify-json/fa6-regular': 1.1.8
+      '@iconify-json/fa6-solid': 1.1.10
       '@rushstack/eslint-patch': 1.2.0
       '@types/jsdom': 20.0.1
       '@types/node': 18.11.18
@@ -814,6 +818,18 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
+    dev: true
+
+  /@iconify-json/fa6-regular/1.1.8:
+    resolution: {integrity: sha512-DLY1lYSdnj6OMHAKQXRSfz6pEhRwGtOZVgOgCl18YnwIHQSBi/bJxTQsGUoYMQpWqpD0HO8abWAPo9wmCr0HQw==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/fa6-solid/1.1.10:
+    resolution: {integrity: sha512-BJDDO8wiFQopALfmgUpTTINapfpYMw4aklJu96zolJSHYzLQTs05Db/bxvKeBeDArn9SMVIY4pA+ExinJqFT/g==}
+    dependencies:
+      '@iconify/types': 2.0.0
     dev: true
 
   /@iconify/types/2.0.0:
