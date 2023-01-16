@@ -9,6 +9,7 @@ html {
   position: relative;
   font-weight: normal;
   font-size: 16px;
+  font-family: 'Manrope', 'Noto Sans KR';
 }
 
 header {
@@ -19,7 +20,6 @@ header {
 body {
   min-width: 100%;
   background: white;
-  font-family: 'Manrope', 'Noto Sans KR';
   -webkit-font-smoothing: antialiased;
 }
 
