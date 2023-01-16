@@ -30,7 +30,6 @@ div {
   flex-direction: column;
   align-items: flex-start;
   gap: 3px;
-  width: 100%;
 }
 input {
   width: 100%;
