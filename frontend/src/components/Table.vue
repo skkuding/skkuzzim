@@ -22,18 +22,19 @@ const DAYS = ['월', '화', '수', '목', '금', '토', '일']
 // column header
 const HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 const MINUTES = [0, 30]
-const TIMES = Array<TimeRange>(30).map((_, index) => {
-  return {
+const TIMES: Array<TimeRange> = []
+for (let i = 1; i <= 30; i++) {
+  TIMES.push({
     startTime: {
-      hour: HOURS[Math.floor((index - 1) / 2)],
-      minute: MINUTES[Math.floor((index - 1) % 2)]
+      hour: HOURS[Math.floor((i - 1) / 2)],
+      minute: MINUTES[Math.floor((i - 1) % 2)]
     },
     endTime: {
-      hour: HOURS[Math.floor(index / 2)],
-      minute: MINUTES[Math.floor(index % 2)]
+      hour: HOURS[Math.floor(i / 2)],
+      minute: MINUTES[Math.floor(i % 2)]
     }
-  }
-})
+  })
+}
 const getTimeRangeString = ({ startTime, endTime }: TimeRange) => {
   return `${startTime.hour}:${startTime.minute.toString().padStart(2, '0')}~${
     endTime.hour
