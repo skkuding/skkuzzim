@@ -14,6 +14,8 @@ const props = defineProps<{
   purpose?: string
 }>()
 
+defineEmits(['edit', 'remove'])
+
 const period = computed(() => {
   return (
     useDateFormat(props.startTime, 'hh:mm').value +
@@ -33,8 +35,8 @@ const period = computed(() => {
         <p>{{ members.length }} 명</p>
       </div>
       <div class="button-box">
-        <Button color="green">수정</Button>
-        <Button color="dark-red">삭제</Button>
+        <Button color="green" @click="$emit(`edit`)">수정</Button>
+        <Button color="dark-red" @click="$emit('remove')">삭제</Button>
       </div>
     </div>
     <div class="list-content" v-if="members.length !== 1">
@@ -107,7 +109,6 @@ button {
   gap: 6.5rem;
   text-transform: uppercase;
 }
-
 .list-content > div > span:first-child {
   text-align: center;
   flex-shrink: 0;
