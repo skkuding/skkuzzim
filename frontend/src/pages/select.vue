@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import MyComponent from "@/components/MyComponent.vue";
-import { useCounterStore } from "@/stores/counter";
-const counter = useCounterStore();
+import MyComponent from '@/components/MyComponent.vue'
+import { useCounterStore } from '@/stores/counter'
+const counter = useCounterStore()
 </script>
 
 <template>

@@ -18,7 +18,7 @@ header {
 body {
   min-width: 100%;
   background: white;
-  font-family: "Manrope", "Noto Sans KR";
+  font-family: 'Manrope', 'Noto Sans KR';
   -webkit-font-smoothing: antialiased;
 }
 
