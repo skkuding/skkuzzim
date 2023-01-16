@@ -64,6 +64,10 @@ const period = computed(() => {
 .list-wrapper {
   width: 800px;
 }
+p,
+span {
+  font-weight: 500;
+}
 .list-header {
   border: 2px solid v-bind("COLOR['light-gray']");
   border-radius: 0.5rem;
@@ -73,13 +77,14 @@ const period = computed(() => {
 }
 .header-center {
   display: grid;
-  grid-template-columns: 3fr 3fr 1fr;
+  grid-template-columns: 2fr 3fr 1fr;
   align-items: center;
   flex-grow: 1;
-  margin: 0 5rem 0 3rem;
+  margin: 0 3.5rem 0 2.5rem;
 }
 .header-center p:last-child {
   text-align: right;
+  color: v-bind("COLOR['dark-blue']");
 }
 .button-box {
   display: flex;
@@ -99,14 +104,14 @@ button {
   flex-direction: column;
   gap: 1.5rem;
   margin-top: 0.5rem;
-  padding: 1rem 0 1rem 9rem;
+  padding: 1rem 0 1rem 7.5rem;
   background-color: #f9eee0;
   border-radius: 0.5rem;
 }
 .list-content > div {
   display: flex;
   align-items: flex-start;
-  gap: 6.5rem;
+  gap: 5.5rem;
   text-transform: uppercase;
 }
 .list-content > div > span:first-child {
