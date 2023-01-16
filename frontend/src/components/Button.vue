@@ -2,12 +2,12 @@
 import { COLOR } from '@/styles/theme'
 
 defineProps<{
-  color?: keyof typeof COLOR
+  color?: keyof typeof COLOR | 'white'
 }>()
 </script>
 
 <template>
-  <button :class="color === 'white' ? 'white-button' : 'colored-button'">
+  <button :class="{ 'colored-button': color !== 'white' }">
     <slot />
   </button>
 </template>
@@ -15,7 +15,11 @@ defineProps<{
 <style scoped>
 button {
   align-items: center;
-  border: none;
+  background-color: v-bind(
+    "!color || color ==='white' ? 'white': COLOR[color]"
+  );
+  border: 2px solid v-bind('COLOR.gray');
+  color: v-bind("COLOR['dark-gray']");
   border-radius: 0.5rem;
   cursor: pointer;
   display: flex;
@@ -31,14 +35,8 @@ button:active {
   opacity: 1;
 }
 
-.white-button {
-  background-color: white;
-  border: 2px solid v-bind('COLOR.gray');
-  color: v-bind("COLOR['dark-gray']");
-}
-
 .colored-button {
-  background-color: v-bind("COLOR[color || 'green']");
+  border: none;
   color: white;
 }
 </style>
