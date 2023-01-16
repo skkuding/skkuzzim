@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useNow } from '@vueuse/core'
 import { COLOR, FONT_SIZE } from '@/styles/theme'
+import { ref } from 'vue'
 
 interface TimeRange {
   startTime: {
@@ -14,11 +15,32 @@ interface TimeRange {
 }
 
 const props = defineProps<{
-  dates: Date[]
+  startTime: Date
 }>()
+
+// 현재 날짜 및 시각
+const now = useNow()
+const isTodayIncluded = ref(false)
+const isSameDate = (date1: Date, date2: Date) => {
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+  )
+}
 
 // row header
 const DAYS = ['월', '화', '수', '목', '금', '토', '일']
+const DATE_MS = 86400000
+const dates: Date[] = []
+for (let i = 0; i < 7; i++) {
+  const date = new Date(props.startTime.getTime() + DATE_MS * i)
+  dates.push(date)
+  if (isSameDate(date, new Date())) {
+    isTodayIncluded.value = true
+  }
+}
+
 // column header
 const HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 const MINUTES = [0, 30]
@@ -41,17 +63,8 @@ const getTimeRangeString = ({ startTime, endTime }: TimeRange) => {
   }:${endTime.minute.toString().padStart(2, '0')}`
 }
 
-// 현재 날짜 및 시각
-const now = useNow()
 const isCurrentTime = ({ startTime, endTime }: TimeRange) => {
-  let isTodayIncluded = false
-  for (let i = 0; i < props.dates.length; i++) {
-    if (isSameDate(props.dates[i], now.value)) {
-      isTodayIncluded = true
-      break
-    }
-  }
-  if (isTodayIncluded) {
+  if (isTodayIncluded.value) {
     if (
       startTime.hour === now.value.getHours() &&
       startTime.minute <= now.value.getMinutes()
@@ -64,14 +77,11 @@ const isCurrentTime = ({ startTime, endTime }: TimeRange) => {
   }
   return false
 }
-const isSameDate = (date1: Date, date2: Date) => {
-  return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
-  )
-}
-const getDateString = (date: Date, time: { hour: number; minute: number }) => {
+
+const getStartTimeString = (
+  date: Date,
+  time: { hour: number; minute: number }
+) => {
   const datetime = new Date(
     date.getFullYear(),
     date.getMonth(),
@@ -118,7 +128,7 @@ const getDateString = (date: Date, time: { hour: number; minute: number }) => {
           </span>
         </th>
         <td v-for="(date, index) in dates" :key="index">
-          <slot :name="getDateString(date, timeRange.startTime)"></slot>
+          <slot :name="getStartTimeString(date, timeRange.startTime)"></slot>
         </td>
       </tr>
     </tbody>
