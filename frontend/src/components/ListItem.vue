@@ -82,6 +82,10 @@ span {
   flex-grow: 1;
   margin: 0 3.5rem 0 2.5rem;
 }
+.header-center p:first-child {
+  width: 96px;
+  text-align: center;
+}
 .header-center p:last-child {
   text-align: right;
   color: v-bind("COLOR['dark-blue']");
@@ -104,20 +108,20 @@ button {
   flex-direction: column;
   gap: 1.5rem;
   margin-top: 0.5rem;
-  padding: 1rem 0 1rem 7.5rem;
+  padding: 1rem 0 1rem 5.75rem;
   background-color: #f9eee0;
   border-radius: 0.5rem;
 }
 .list-content > div {
   display: flex;
   align-items: flex-start;
-  gap: 5.5rem;
+  gap: 4.12rem;
   text-transform: uppercase;
 }
 .list-content > div > span:first-child {
   text-align: center;
   flex-shrink: 0;
-  flex-basis: 45px;
+  flex-basis: 96px;
 }
 .member-list {
   flex-grow: 1;
@@ -126,6 +130,8 @@ button {
   gap: 0.6rem 1rem;
 }
 .circle-icon {
+  width: 20px;
+  height: 20px;
   color: v-bind("club === 'skkuding' ? COLOR.green : COLOR.blue");
   flex-shrink: 0;
 }
