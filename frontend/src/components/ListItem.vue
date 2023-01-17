@@ -120,10 +120,10 @@ button {
   flex-basis: 45px;
 }
 .member-list {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 45px);
+  gap: 0.6rem 1rem;
 }
 .circle-icon {
   color: v-bind("club === 'skkuding' ? COLOR.green : COLOR.blue");
