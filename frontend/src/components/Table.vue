@@ -69,10 +69,10 @@ const isNow = (start: string) => {
   const nowH = now.value.getHours()
   const nowM = now.value.getMinutes()
   const startH = parseInt(start.substring(0, 2))
-  const startM = parseInt(start.substring(2, 4))
+  const startM = parseInt(start.substring(3, 5))
   if (
     (startH === nowH && startM === 0 && nowM < 30) ||
-    (startH === nowH && startM === 30 && 30 < nowM && nowM < 60)
+    (startH === nowH && startM === 30 && 30 <= nowM && nowM < 60)
   )
     return true
   return false
