@@ -7,14 +7,16 @@ export class ReservationService {
   async specificReservation(start: string, end: string) {
     const dbresults = await this.prismaService.reservation.findMany({
       where: {
-        AND: [
+        OR: [
           {
             startTime: {
-              gte: new Date(start)
+              gte: new Date(start),
+              let: new Date(end)
             }
           },
           {
             endTime: {
+              gte: new Date(start),
               lte: new Date(end)
             }
           }
