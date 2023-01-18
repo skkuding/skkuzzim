@@ -9,7 +9,6 @@ export class ReservationController {
     @Query('startTime') startTime: string,
     @Query('endTime') endTime: string
   ) {
-    console.log(startTime, endTime)
     return this.reservationService.specificReservation(startTime, endTime)
   }
 }
