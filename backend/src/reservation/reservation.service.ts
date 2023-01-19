@@ -24,6 +24,12 @@ export class ReservationService {
               { endTime: { gt: new Date(startTime) } },
               { endTime: { lte: new Date(endTime) } }
             ]
+          },
+          {
+            AND: [
+              { startTime: { lte: new Date(startTime) } },
+              { endTime: { gte: new Date(endTime) } }
+            ]
           }
         ]
       },
