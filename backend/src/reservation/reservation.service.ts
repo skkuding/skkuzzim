@@ -27,8 +27,22 @@ export class ReservationService {
           }
         }
       }
+      // create 이전에 해당 시간에 자리가 있는지 확인 필요
     })
 
-    return newReservation
+    // get member of the reservation
+    const getReservationMember = await this.prismaService.member.findMany({
+      where: {
+        reservationId: newReservation.id
+      },
+      select: {
+        username: true
+      }
+    })
+
+    return {
+      ...newReservation,
+      member: getReservationMember.map((e) => e.username)
+    }
   }
 }
