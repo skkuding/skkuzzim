@@ -18,9 +18,9 @@ defineEmits(['edit', 'remove'])
 
 const period = computed(() => {
   return (
-    useDateFormat(props.startTime, 'hh:mm').value +
+    useDateFormat(props.startTime, 'HH:mm').value +
     '~' +
-    useDateFormat(props.endTime, 'hh:mm').value
+    useDateFormat(props.endTime, 'HH:mm').value
   )
 })
 </script>
@@ -77,10 +77,10 @@ span {
 }
 .header-center {
   display: grid;
-  grid-template-columns: 2fr 3fr 1fr;
+  grid-template-columns: 3fr 3fr 1.5fr;
   align-items: center;
   flex-grow: 1;
-  margin: 0 3.5rem 0 2.5rem;
+  margin: 0 3.5rem 0 3rem;
 }
 .header-center p:first-child {
   width: 96px;
@@ -108,14 +108,14 @@ button {
   flex-direction: column;
   gap: 1.5rem;
   margin-top: 0.5rem;
-  padding: 1rem 0 1rem 5.75rem;
+  padding: 1rem 0 1rem 6.25rem;
   background-color: #f9eee0;
   border-radius: 0.5rem;
 }
 .list-content > div {
   display: flex;
   align-items: flex-start;
-  gap: 4.12rem;
+  gap: 5.95rem;
   text-transform: uppercase;
 }
 .list-content > div > span:first-child {
