@@ -10,16 +10,18 @@ export class ReservationService {
   async getAllReservations(startTime: string, endTime: string) {
     const result = await this.prisma.reservation.findMany({
       where: {
-        AND: [
+        OR: [
           {
-            startTime: {
-              gte: new Date(startTime)
-            }
+            AND: [
+              { startTime: { gte: new Date(startTime) } },
+              { startTime: { lt: new Date(endTime) } }
+            ]
           },
           {
-            endTime: {
-              lte: new Date(endTime)
-            }
+            AND: [
+              { endTime: { gt: new Date(startTime) } },
+              { endTime: { lte: new Date(endTime) } }
+            ]
           }
         ]
       },
@@ -51,12 +53,17 @@ export class ReservationService {
         base < item.endTime.getTime();
         base += HALF_HOUR
       ) {
-        splitedReservationList.push({
-          startTime: new Date(base),
-          endTime: new Date(base + HALF_HOUR),
-          club: item.club,
-          people: item.member.length
-        })
+        if (
+          base >= new Date(startTime).getTime() &&
+          base < new Date(endTime).getTime()
+        ) {
+          splitedReservationList.push({
+            startTime: new Date(base),
+            endTime: new Date(base + HALF_HOUR),
+            club: item.club,
+            people: item.member.length
+          })
+        }
       }
     })
 
