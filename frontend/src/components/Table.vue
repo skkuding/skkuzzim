@@ -114,8 +114,8 @@ const isNow = (start: string) => {
 <style scoped>
 table {
   width: 100%;
-  font-size: v-bind('FONT_SIZE.content');
   border-spacing: 0;
+  font-size: v-bind('FONT_SIZE.content');
 }
 .current {
   padding: 9px 5px;
@@ -125,7 +125,7 @@ table {
 }
 th.row .current {
   max-width: 64px;
-  margin: 0 auto;
+  margin: 0 auto 5px;
 }
 th.column .current {
   padding: 4px 6px;
@@ -145,7 +145,7 @@ th.column .current {
 }
 td,
 th {
-  min-width: 138px;
+  width: 12.5%;
   height: 44px;
   padding: 0;
   border-bottom: 1px solid v-bind("COLOR['light-gray']");
@@ -156,15 +156,11 @@ td:last-child,
 th:last-child {
   border-right: none;
 }
-th.row {
-  padding: 5px;
-}
 th.row > span {
   display: flex;
   align-items: flex-end;
   justify-content: center;
   gap: 4px;
   font-size: v-bind('FONT_SIZE.title');
-  font-weight: bold;
 }
 </style>
