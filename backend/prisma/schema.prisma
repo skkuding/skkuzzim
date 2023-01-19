@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,17 +16,16 @@ model Reservation {
   purpose    String
   createTime DateTime @default(now()) @map("create_time")
   updateTime DateTime @updatedAt @map("update_time")
-
-  member Member[]
+  member     Member[]
 
   @@map("reservation")
 }
 
 model Member {
   id            Int         @id @default(autoincrement())
-  reservation   Reservation @relation(fields: [reservationId], references: [id])
   reservationId Int         @map("reservation_id")
   username      String
+  reservation   Reservation @relation(fields: [reservationId], references: [id])
 
   @@map("member")
 }

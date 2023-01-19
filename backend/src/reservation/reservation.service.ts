@@ -1,4 +1,3 @@
-import { createReservationDto } from './reservation.dto'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 
@@ -6,29 +5,28 @@ import { PrismaService } from 'src/prisma/prisma.service'
 export class ReservationService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createReservation(createReservationParams: createReservationDto) {
-    const { creator, club, startTime, endTime, purpose, member } =
-      createReservationParams
-
-    const membersArr = member.map((e) => {
-      return { username: e }
-    })
-
-    const newReservation = await this.prismaService.reservation.create({
+  async deleteReservation(id: number) {
+    // relation 해제, member 삭제
+    await this.prismaService.reservation.update({
+      where: {
+        id: Number(id)
+      },
       data: {
-        creator,
-        club,
-        startTime: new Date(startTime),
-        endTime: new Date(endTime),
-        purpose,
         member: {
-          createMany: {
-            data: [...membersArr]
-          }
+          deleteMany: {}
         }
       }
     })
 
-    return newReservation
+    // reservation 삭제
+    await this.prismaService.reservation.delete({
+      where: {
+        id: Number(id)
+      }
+    })
+
+    return {
+      'reservation id': id
+    }
   }
 }

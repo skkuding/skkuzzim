@@ -1,17 +1,12 @@
-import { createReservationDto } from './reservation.dto'
 import { ReservationService } from './reservation.service'
-import { Controller, Post, Body } from '@nestjs/common'
+import { Controller, Delete, Param } from '@nestjs/common'
 
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
-  @Post()
-  async createReservation(
-    @Body() createReservationParams: createReservationDto
-  ) {
-    return await this.reservationService.createReservation(
-      createReservationParams
-    )
+  @Delete('/:id')
+  async deleteReservation(@Param('id') id: number) {
+    return this.reservationService.deleteReservation(id)
   }
 }
