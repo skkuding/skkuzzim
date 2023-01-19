@@ -89,19 +89,19 @@ const isNow = (start: string) => {
           :key="index"
           class="row"
         >
-          <span :class="style">
+          <div :class="style">
             <span class="day">{{ day }}</span>
             <span class="date">{{ useDateFormat(date, 'DD').value }}</span>
-          </span>
+          </div>
         </th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="({ start, end }, index) in PERIODS" :key="index">
         <th class="column">
-          <span :class="isNow(start) ? 'current' : ''">
-            {{ start }} ~ {{ end }}
-          </span>
+          <div :class="isNow(start) ? 'current' : ''">
+            <span>{{ start }} ~ {{ end }}</span>
+          </div>
         </th>
         <td v-for="({ date }, index) in week" :key="index">
           <slot :name="`${date}T${start}:00.000Z`" />
@@ -115,34 +115,8 @@ const isNow = (start: string) => {
 table {
   width: 100%;
   border-spacing: 0;
-  font-size: v-bind('FONT_SIZE.content');
 }
-.current {
-  padding: 9px 5px;
-  color: white;
-  border-radius: 12px;
-  background-color: v-bind('COLOR.yellow');
-}
-th.row .current {
-  max-width: 64px;
-  margin: 0 auto 5px;
-}
-th.column .current {
-  padding: 4px 6px;
-}
-.sat {
-  color: v-bind('COLOR.blue');
-}
-.sun {
-  color: v-bind('COLOR.red');
-}
-.date {
-  font-weight: bold;
-  font-size: v-bind('FONT_SIZE.content');
-}
-.day {
-  font-weight: bold;
-}
+
 td,
 th {
   width: 12.5%;
@@ -156,11 +130,38 @@ td:last-child,
 th:last-child {
   border-right: none;
 }
-th.row > span {
+.current {
+  width: fit-content;
+  margin: 0 auto;
+  padding: 4px 6px;
+  color: white;
+  border-radius: 12px;
+  background-color: v-bind('COLOR.yellow');
+}
+th.column {
+  padding: 5px 0;
+}
+th.row .current {
+  margin-bottom: 5px;
+  padding: 9px 16px;
+}
+th.row > div {
   display: flex;
   align-items: flex-end;
   justify-content: center;
   gap: 4px;
+}
+.sat {
+  color: v-bind('COLOR.blue');
+}
+.sun {
+  color: v-bind('COLOR.red');
+}
+.date {
+  font-weight: bold;
+}
+.day {
+  font-weight: bold;
   font-size: v-bind('FONT_SIZE.title');
 }
 </style>
