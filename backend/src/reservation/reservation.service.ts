@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { GetAllReservationDTO } from './dto/getAllReservation.dto'
 
 const HALF_HOUR = 30 * 60 * 1000
 
@@ -7,7 +8,8 @@ const HALF_HOUR = 30 * 60 * 1000
 export class ReservationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAllReservations(startTime: string, endTime: string) {
+  async getAllReservations(reservationDTO: GetAllReservationDTO) {
+    const { startTime, endTime } = reservationDTO
     const result = await this.prisma.reservation.findMany({
       where: {
         OR: [
