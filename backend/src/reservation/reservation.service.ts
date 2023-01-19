@@ -10,8 +10,8 @@ export class ReservationService {
     const { creator, club, startTime, endTime, purpose, member } =
       createReservationParams
 
-    const membersArr = member.map((e) => {
-      return { username: e }
+    const membersArr = member.map((name) => {
+      return { username: name }
     })
 
     const newReservation = await this.prismaService.reservation.create({
