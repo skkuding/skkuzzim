@@ -5,5 +5,5 @@ export class createReservationDto {
   startTime: Date
   endTime: Date
   purpose: string
-  member: Array<string>
+  members: string[]
 }

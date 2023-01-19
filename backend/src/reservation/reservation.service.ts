@@ -7,10 +7,10 @@ export class ReservationService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createReservation(createReservationParams: createReservationDto) {
-    const { creator, club, startTime, endTime, purpose, member } =
+    const { creator, club, startTime, endTime, purpose, members } =
       createReservationParams
 
-    const membersArr = member.map((name) => {
+    const membersArr = members.map((name) => {
       return { username: name }
     })
 
