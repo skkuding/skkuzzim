@@ -4,11 +4,21 @@ import { GetAllReservationDTO } from './dto/getAllReservation.dto'
 
 const HALF_HOUR = 30 * 60 * 1000
 
+type getAllReservationsResponseDTO = {
+  startTime: Date
+  endTime: Date
+  skkuding: number
+  skkud: number
+  isFull: boolean
+}
+
 @Injectable()
 export class ReservationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAllReservations(reservationDTO: GetAllReservationDTO) {
+  async getAllReservations(
+    reservationDTO: GetAllReservationDTO
+  ): Promise<getAllReservationsResponseDTO[]> {
     const { startTime, endTime } = reservationDTO
     const result = await this.prisma.reservation.findMany({
       where: {
@@ -75,8 +85,8 @@ export class ReservationService {
       }
     })
 
-    const mergedReservationList = splitedReservationList.map(
-      (item, index, array) => {
+    const mergedReservationList: getAllReservationsResponseDTO[] =
+      splitedReservationList.map((item, index, array) => {
         const overlabedReservations = array.filter(
           (value) => value.startTime.getTime() === item.startTime.getTime()
         )
@@ -101,10 +111,10 @@ export class ReservationService {
               ? false
               : true
         }
-      }
-    )
+      })
 
-    const mergedReservationMap = new Map()
+    const mergedReservationMap: Map<string, getAllReservationsResponseDTO> =
+      new Map()
     mergedReservationList.forEach((item) => {
       mergedReservationMap.set(JSON.stringify(item), item)
     })
