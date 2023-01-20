@@ -1,7 +1,7 @@
 name: 📘 [Frontend] New feature development
 description: 새로운 feature를 개발합니다
-title: "[Feature] (ex. 메인 페이지 구현/API 연결)"
-labels: ["feat: frontend"]
+title: '[Feature] (ex. 메인 페이지 구현/API 연결)'
+labels: ['feat: frontend']
 body:
   - type: dropdown
     attributes:
