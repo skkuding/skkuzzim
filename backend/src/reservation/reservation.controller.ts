@@ -1,12 +1,16 @@
-import { Body, Controller, Patch } from '@nestjs/common'
-import { updateReservationDto } from './reservation.dto'
+import { Body, Controller, Param, Patch } from '@nestjs/common'
+import { ParseIntPipe } from '@nestjs/common/pipes'
+import { UpdateReservationDto } from './reservation.dto'
 import { ReservationService } from './reservation.service'
 
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
   @Patch(':id')
-  async reserveUpdate(@Body() updateInfo: updateReservationDto) {
-    return await this.reservationService.updateReservation(updateInfo)
+  async reserveUpdate(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateInfo: UpdateReservationDto
+  ) {
+    return await this.reservationService.updateReservation(id, updateInfo)
   }
 }
