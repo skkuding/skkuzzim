@@ -125,8 +125,9 @@ button {
 }
 .member-list {
   flex-grow: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 45px);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 0.6rem 1rem;
 }
 .circle-icon {
