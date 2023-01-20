@@ -1,9 +1,16 @@
-export class updateReservationDto {
-  id: number
+import { IsString } from 'class-validator'
+
+export class UpdateReservationDto {
+  @IsString()
   creator: string
+  @IsString()
   club: string
+  @IsString()
   startTime: Date
+  @IsString()
   endTime: Date
+  @IsString()
   purpose: string
-  member: Array<string>
+  @IsString({ each: true })
+  members: string[]
 }
