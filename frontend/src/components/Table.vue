@@ -22,16 +22,14 @@ const week = computed(() => {
   const format = 'YYYY-MM-DD'
   return new Array<Day>(7)
     .fill({
-      day: '월',
-      date: useDateFormat(props.monday, format).value
+      day: '',
+      date: ''
     })
     .map((x, i) => {
       const temp = Object.assign({}, x)
       temp.day = DAYS[i]
-      temp.date = useDateFormat(
-        new Date().setDate(props.monday.getDate() + i),
-        format
-      ).value
+      const date = new Date(props.monday).setDate(props.monday.getDate() + i)
+      temp.date = useDateFormat(date, format).value
       temp.style =
         temp.date === useDateFormat(now, format).value
           ? 'current'
