@@ -15,14 +15,10 @@ export class ReservationService {
     const startTimeDate = new Date(startTime)
     const endTimeDate = new Date(endTime)
     if (
-      startTimeDate.getMinutes() !== 30 &&
-      startTimeDate.getMinutes() !== 0 &&
-      endTimeDate.getMinutes() !== 30 &&
-      endTimeDate.getMinutes() !== 0
+      (startTimeDate.getMinutes() !== 30 && startTimeDate.getMinutes() !== 0) ||
+      (endTimeDate.getMinutes() !== 30 && endTimeDate.getMinutes() !== 0)
     )
-      return new BadRequestException(
-        'Please check the time format!'
-      ).getResponse()
+      throw new BadRequestException('Please check the time format!')
 
     // check if the room is available (예약 시간에 강의실이 꽉 찼는지 확인 필요)
     // 예약 시간과 겹치는 기존 예약들 쿼리
@@ -59,8 +55,7 @@ export class ReservationService {
           reserved += reservationEle._count.member
         }
       })
-      if (reserved > maxMember)
-        return new BadRequestException('정원 초과!').getResponse()
+      if (reserved > maxMember) throw new BadRequestException('정원 초과!')
     }
 
     const membersArr = members.map((name) => {
