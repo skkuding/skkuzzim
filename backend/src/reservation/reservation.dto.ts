@@ -1,13 +1,13 @@
-import { IsString } from 'class-validator'
+import { IsString, IsDateString } from 'class-validator'
 
 export class UpdateReservationDto {
   @IsString()
   creator: string
   @IsString()
   club: string
-  @IsString()
+  @IsDateString()
   startTime: Date
-  @IsString()
+  @IsDateString()
   endTime: Date
   @IsString()
   purpose: string
