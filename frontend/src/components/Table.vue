@@ -28,8 +28,10 @@ const week = computed(() => {
     .map((x, i) => {
       const temp = Object.assign({}, x)
       temp.day = DAYS[i]
-      const date = new Date(props.monday).setDate(props.monday.getDate() + i)
-      temp.date = useDateFormat(date, format).value
+      temp.date = useDateFormat(
+        new Date(0).setDate(props.monday.getDate() + i),
+        format
+      ).value
       temp.style =
         temp.date === useDateFormat(now, format).value
           ? 'current'
