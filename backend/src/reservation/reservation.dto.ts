@@ -1,6 +1,6 @@
 import { IsArray, IsString } from 'class-validator'
 
-export class createReservationRequestDto {
+export class CreateReservationRequestDto {
   @IsString()
   creator: string
 

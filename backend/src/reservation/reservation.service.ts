@@ -1,4 +1,4 @@
-import { createReservationRequestDto } from './reservation.dto'
+import { CreateReservationRequestDto } from './reservation.dto'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 
@@ -7,7 +7,7 @@ export class ReservationService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createReservation(
-    createReservationParams: createReservationRequestDto
+    createReservationParams: CreateReservationRequestDto
   ) {
     const maxMember = 8 // 시간 당 최대 예약 가능 인원
     const { creator, club, startTime, endTime, purpose, members } =
