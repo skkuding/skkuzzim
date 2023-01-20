@@ -4,8 +4,8 @@ import { PrismaService } from 'src/prisma/prisma.service'
 @Injectable()
 export class ReservationService {
   constructor(private readonly prismaService: PrismaService) {}
-  async specificReservation(start: string, end: string) {
-    const dbresults = await this.prismaService.reservation.findMany({
+  async getSpecificReservation(start: string, end: string) {
+    const rawData = await this.prismaService.reservation.findMany({
       where: {
         OR: [
           {
@@ -40,8 +40,8 @@ export class ReservationService {
       }
     })
     const results = {
-      total: dbresults.length,
-      data: dbresults.map((item) => {
+      total: rawData.length,
+      data: rawData.map((item) => {
         const member = item.member.map((element) => {
           return element.username
         })

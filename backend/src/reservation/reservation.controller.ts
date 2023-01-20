@@ -5,10 +5,10 @@ import { ReservationService } from './reservation.service'
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
   @Get('detail')
-  getSpecificReservations(
+  async getSpecificReservations(
     @Query('startTime') startTime: string,
     @Query('endTime') endTime: string
   ) {
-    return this.reservationService.specificReservation(startTime, endTime)
+    return await this.reservationService.specificReservation(startTime, endTime)
   }
 }
