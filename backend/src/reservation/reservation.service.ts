@@ -6,9 +6,8 @@ import { PrismaService } from 'src/prisma/prisma.service'
 export class ReservationService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async updateReservation(id: number, body: UpdateReservationDto) {
+  async updateReservation(idWeFind: number, body: UpdateReservationDto) {
     const { creator, club, startTime, endTime, purpose, members } = body
-    const idWeFind = id
     
     const sameTime = await this.prismaService.reservation.findMany({
       where: {
