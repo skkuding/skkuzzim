@@ -1,4 +1,4 @@
-import { createReservationDto } from './reservation.dto'
+import { createReservationRequestDto } from './reservation.dto'
 import { ReservationService } from './reservation.service'
 import { Controller, Post, Body } from '@nestjs/common'
 
@@ -8,7 +8,7 @@ export class ReservationController {
 
   @Post()
   async createReservation(
-    @Body() createReservationParams: createReservationDto
+    @Body() createReservationParams: createReservationRequestDto
   ) {
     return await this.reservationService.createReservation(
       createReservationParams
