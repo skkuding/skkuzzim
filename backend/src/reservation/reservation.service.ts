@@ -1,4 +1,4 @@
-import { updateReservationDto } from './reservation.dto'
+import { UpdateReservationDto } from './reservation.dto'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 
@@ -6,44 +6,73 @@ import { PrismaService } from 'src/prisma/prisma.service'
 export class ReservationService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async updateReservation(body: updateReservationDto) {
-    const { id, creator, club, startTime, endTime, purpose, member } = body
-
-    if (member.length > 8) {
-      throw new Error('member number is more than 8')
-    }
-
-    const data_array = member.map((element) => {
-      return { reservationId: id, username: element }
-    })
-
-    const deleteMany = await this.prismaService.member.deleteMany({
+  async updateReservation(id: number, body: UpdateReservationDto) {
+    const { creator, club, startTime, endTime, purpose, members } = body
+    const idWeFind = id
+    
+    const sameTime = await this.prismaService.reservation.findMany({
       where: {
-        reservationId: {
-          equals: id
-        },
+        NOT: [{ id: idWeFind }],
+        AND: [
+          {
+            startTime: {
+              gte: new Date(startTime)
+            }
+          },
+          {
+            endTime: {
+              lte: new Date(endTime)
+            }
+          }
+        ]
+      },
+      select: {
+        member: {
+          select: {
+            username: true
+          }
+        }
       }
     })
 
-    const member_add = await this.prismaService.member.createMany({
-      data: [...data_array]
+    let sameTimeMembers = 0
+    sameTime.forEach((eachReservation) => {
+      sameTimeMembers += eachReservation.member.length
+      console.log(eachReservation.member)
+    })
+    
+    if (sameTimeMembers + members.length > 8) {
+      throw new Error('member number at that time is more than 8')
+    }
+
+    const dataArray = members.map((member) => {
+      return { reservationId: id, username: member }
     })
 
-    const reservation_update = await this.prismaService.reservation.update({
+    await this.prismaService.member.deleteMany({
       where: {
-        id: id,
+        reservationId: {
+          equals: idWeFind
+        }
+      }
+    })
+    await this.prismaService.member.createMany({
+      data: dataArray
+    })
+
+    const reservationUpdate = await this.prismaService.reservation.update({
+      where: {
+        id: idWeFind
       },
       data: {
-        id: id,
         creator: creator,
         club: club,
         startTime: startTime,
         endTime: endTime,
-        purpose: purpose,
-        updateTime: new Date(),
+        purpose: purpose
       }
     })
 
-    return reservation_update
+    return reservationUpdate
   }
 }
