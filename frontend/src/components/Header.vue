@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IconBrandsGithub from '~icons/fa6-brands/github';
+import IconBrandsGithub from "~icons/fa6-brands/github";
 const props = defineProps<{
   year?: number;
   month: number;
@@ -11,7 +11,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="headerWrapper">
+  <header class="headerWrapper">
     <!-- <div
       class="letters"
       v-if="startTime && endTime ? `${{ year }} year` : `${{ month }} month`"
@@ -19,27 +19,28 @@ const props = defineProps<{
     <div class="letters" v-if="startTime && endTime && !year && day">
       {{ month }}월 {{ day }}일 {{ startTime }} ~ {{ endTime }}
     </div>
-    <div class="letters" v-if="year && !day && !startTime && !endTime">{{ year }}년 {{ month }}월</div>
+    <div class="letters" v-if="year && !day && !startTime && !endTime">
+      {{ year }}년 {{ month }}월
+    </div>
     <div>
       <a href="https://github.com/skkuding/skkuzzim" target="_blank">
         <IconBrandsGithub class="letters" />
       </a>
     </div>
-  </div>
+  </header>
 </template>
 
 <style scoped>
 .headerWrapper {
   width: 100%;
-  background: linear-gradient(90deg, #8dc63f,#3f9dc6);
+  background: linear-gradient(90deg, #8dc63f, #3f9dc6);
   color: white;
   display: flex;
   justify-content: space-around;
   align-items: center;
   height: 80px;
   position: sticky;
-  top:0;
-  width: 100%;
+  top: 0;
   margin: 0;
 }
 .letters {

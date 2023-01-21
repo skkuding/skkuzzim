@@ -1,9 +1,9 @@
 <script setup lang="ts">
-// write script code
+import Header from "./components/Header.vue";
 </script>
 
 <template>
-  <!-- TODO: 헤더 컴포넌트 추가 -->
+  <Header :year="2023" :month="1" class="header"></Header>
   <main class="wrapper">
     <router-view />
   </main>

@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import IconRegularCircleCheck from "~icons/fa6-regular/circle-check";
 defineProps<{
   msg: string;
 }>();
-library.add(faCircleCheck);
-import iconRegularCircleCheck from '~icons/fa6-regular/circle-check'
 </script>
 
 <template>
   <div class="toastWrapper">
-    <iconRegularCircleCheck />
+    <IconRegularCircleCheck />
     <div class="toastMessage">{{ msg }} 완료되었습니다!</div>
   </div>
 </template>
