@@ -29,7 +29,7 @@ const week = computed(() => {
       const temp = Object.assign({}, x)
       temp.day = DAYS[i]
       temp.date = useDateFormat(
-        new Date(0).setDate(props.monday.getDate() + i),
+        new Date(props.monday).setDate(props.monday.getDate() + i),
         format
       ).value
       temp.style =
