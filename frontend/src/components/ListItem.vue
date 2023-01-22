@@ -31,28 +31,36 @@ const period = computed(() => {
 <template>
   <div class="list-wrapper">
     <div class="list-header">
-      <IconCircle class="circle-icon" />
-      <div class="header-center">
-        <p>{{ period }}</p>
-        <p>{{ purpose || creator }}</p>
-        <p>{{ members.length }} 명</p>
+      <div>
+        <IconCircle class="circle-icon" />
+        <p class="period">{{ period }}</p>
       </div>
-      <div class="button-box">
-        <Button color="green" @click="$emit('edit', id)">수정</Button>
-        <Button color="dark-red" @click="$emit('remove', id)">삭제</Button>
+      <div>
+        <p class="purpose">{{ purpose || creator }}</p>
+        <p class="member-cnt">{{ members.length }} 명</p>
+        <div class="button-box">
+          <Button color="green" @click="$emit(`edit`)">수정</Button>
+          <Button color="dark-red" @click="$emit('remove')">삭제</Button>
+        </div>
       </div>
     </div>
     <div class="list-content" v-if="members.length !== 1">
       <div>
-        <span>소속</span>
+        <div class="label">
+          <span>소속</span>
+        </div>
         <span>{{ club }}</span>
       </div>
       <div>
-        <span>예약자</span>
+        <div class="label">
+          <span>예약자</span>
+        </div>
         <span>{{ creator }}</span>
       </div>
       <div>
-        <span>참가자</span>
+        <div class="label">
+          <span>참가자</span>
+        </div>
         <div class="member-list">
           <span v-for="member in members" :key="member">
             {{ member }}
@@ -65,7 +73,8 @@ const period = computed(() => {
 
 <style scoped>
 .list-wrapper {
-  width: 800px;
+  max-width: 800px;
+  width: 100%;
 }
 p,
 span {
@@ -75,22 +84,25 @@ span {
   border: 2px solid v-bind("COLOR['light-gray']");
   border-radius: 0.5rem;
   padding: 1rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 6rem;
+}
+.list-header > div {
   display: flex;
   align-items: center;
 }
-.header-center {
-  display: grid;
-  grid-template-columns: 3fr 3fr 1.5fr;
-  align-items: center;
+.list-header > div:last-child {
+  gap: 3rem;
+}
+.period {
   flex-grow: 1;
-  margin: 0 3.5rem 0 3rem;
-}
-.header-center p:first-child {
-  width: 96px;
-  text-align: center;
-}
-.header-center p:last-child {
   text-align: right;
+}
+.purpose {
+  flex-grow: 1;
+}
+.member-cnt {
   color: v-bind("COLOR['dark-blue']");
 }
 .button-box {
@@ -111,20 +123,23 @@ button {
   flex-direction: column;
   gap: 1.5rem;
   margin-top: 0.5rem;
-  padding: 1rem 0 1rem 6.25rem;
+  padding: 1rem 2rem;
   background-color: #f9eee0;
   border-radius: 0.5rem;
 }
 .list-content > div {
-  display: flex;
-  align-items: flex-start;
-  gap: 5.95rem;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 6rem;
   text-transform: uppercase;
 }
-.list-content > div > span:first-child {
+.label {
+  display: flex;
+  justify-content: flex-end;
+}
+.label > span {
+  flex-basis: 45px;
   text-align: center;
-  flex-shrink: 0;
-  flex-basis: 96px;
 }
 .member-list {
   flex-grow: 1;
