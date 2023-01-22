@@ -1,31 +1,49 @@
 import { UpdateReservationDto } from './reservation.dto'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 
 @Injectable()
 export class ReservationService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async updateReservation(idWeFind: number, body: UpdateReservationDto) {
-    const { creator, club, startTime, endTime, purpose, members } = body
-    
-    const sameTime = await this.prismaService.reservation.findMany({
+  async updateReservation(
+    idWeFind: number,
+    updateReservationParams: UpdateReservationDto
+  ) {
+    const { creator, club, startTime, endTime, purpose, members } =
+      updateReservationParams
+
+    //check startTime and endTime
+    const startTimeDate = new Date(startTime)
+    const endTimeDate = new Date(endTime)
+    const maxMember = 8
+
+    if (
+      (startTimeDate.getMinutes() !== 30 && startTimeDate.getMinutes() !== 0) ||
+      (endTimeDate.getMinutes() !== 30 && endTimeDate.getMinutes() !== 0)
+    )
+      throw new BadRequestException('Please check the time format!')
+
+    //check reservation overlaps
+    const reservationOverlap = await this.prismaService.reservation.findMany({
       where: {
         NOT: [{ id: idWeFind }],
         AND: [
           {
-            startTime: {
-              gte: new Date(startTime)
+            endTime: {
+              gt: startTimeDate
             }
           },
           {
-            endTime: {
-              lte: new Date(endTime)
+            startTime: {
+              lt: endTimeDate
             }
           }
         ]
       },
       select: {
+        startTime: true,
+        endTime: true,
         member: {
           select: {
             username: true
@@ -34,18 +52,27 @@ export class ReservationService {
       }
     })
 
-    let sameTimeMembers = 0
-    sameTime.forEach((eachReservation) => {
-      sameTimeMembers += eachReservation.member.length
-      console.log(eachReservation.member)
-    })
-    
-    if (sameTimeMembers + members.length > 8) {
-      throw new Error('member number at that time is more than 8')
+    let totalMembers = members.length
+
+    for (
+      let timeBlockstart = new Date(startTime);
+      timeBlockstart < endTimeDate;
+      timeBlockstart.setMinutes(timeBlockstart.getMinutes() + 30)
+    ) {
+      reservationOverlap.map((eachReservation) => {
+        if (
+          timeBlockstart >= eachReservation.startTime &&
+          timeBlockstart < eachReservation.endTime
+        ) {
+          totalMembers += eachReservation.member.length
+        }
+      })
+      if (totalMembers > maxMember) throw new BadRequestException('정원 초과!')
     }
 
+    //update member database
     const dataArray = members.map((member) => {
-      return { reservationId: id, username: member }
+      return { reservationId: idWeFind, username: member }
     })
 
     await this.prismaService.member.deleteMany({
@@ -59,6 +86,7 @@ export class ReservationService {
       data: dataArray
     })
 
+    //update reservation database
     const reservationUpdate = await this.prismaService.reservation.update({
       where: {
         id: idWeFind
@@ -72,6 +100,9 @@ export class ReservationService {
       }
     })
 
-    return reservationUpdate
+    return {
+      ...reservationUpdate,
+      members
+    }
   }
 }
