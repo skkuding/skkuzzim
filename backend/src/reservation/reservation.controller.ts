@@ -6,11 +6,15 @@ import { ReservationService } from './reservation.service'
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
+
   @Patch(':id')
   async reserveUpdate(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateInfo: UpdateReservationDto
+    @Body() updateReservationParams: UpdateReservationDto
   ) {
-    return await this.reservationService.updateReservation(id, updateInfo)
+    return await this.reservationService.updateReservation(
+      id,
+      updateReservationParams
+    )
   }
 }
