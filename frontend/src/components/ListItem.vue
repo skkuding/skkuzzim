@@ -15,9 +15,7 @@ const props = defineProps<{
 }>()
 
 defineEmits<{
-  // eslint-disable-next-line no-unused-vars
   (e: 'edit', id: number): void
-  // eslint-disable-next-line no-unused-vars
   (e: 'remove', id: number): void
 }>()
 
