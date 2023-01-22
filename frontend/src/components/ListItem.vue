@@ -14,7 +14,12 @@ const props = defineProps<{
   purpose?: string
 }>()
 
-defineEmits(['edit', 'remove'])
+defineEmits<{
+  // eslint-disable-next-line no-unused-vars
+  (e: 'edit', id: number): void
+  // eslint-disable-next-line no-unused-vars
+  (e: 'remove', id: number): void
+}>()
 
 const period = computed(() => {
   return (
@@ -35,8 +40,8 @@ const period = computed(() => {
         <p>{{ members.length }} 명</p>
       </div>
       <div class="button-box">
-        <Button color="green" @click="$emit(`edit`)">수정</Button>
-        <Button color="dark-red" @click="$emit('remove')">삭제</Button>
+        <Button color="green" @click="$emit('edit', id)">수정</Button>
+        <Button color="dark-red" @click="$emit('remove', id)">삭제</Button>
       </div>
     </div>
     <div class="list-content" v-if="members.length !== 1">
