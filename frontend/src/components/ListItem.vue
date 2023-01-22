@@ -39,8 +39,8 @@ const period = computed(() => {
         <p class="purpose">{{ purpose || creator }}</p>
         <p class="member-cnt">{{ members.length }} 명</p>
         <div class="button-box">
-          <Button color="green" @click="$emit(`edit`)">수정</Button>
-          <Button color="dark-red" @click="$emit('remove')">삭제</Button>
+          <Button color="green" @click="$emit('edit', id)">수정</Button>
+          <Button color="dark-red" @click="$emit('remove', id)">삭제</Button>
         </div>
       </div>
     </div>
