@@ -52,22 +52,22 @@ export class ReservationService {
       }
     })
 
-    let totalMembers = members.length
-
     for (
       let timeBlockstart = new Date(startTime);
       timeBlockstart < endTimeDate;
       timeBlockstart.setMinutes(timeBlockstart.getMinutes() + 30)
     ) {
+      let reservedMembers = members.length
       reservationOverlap.map((eachReservation) => {
         if (
           timeBlockstart >= eachReservation.startTime &&
           timeBlockstart < eachReservation.endTime
         ) {
-          totalMembers += eachReservation.member.length
+          reservedMembers += eachReservation.member.length
         }
       })
-      if (totalMembers > maxMember) throw new BadRequestException('정원 초과!')
+      if (reservedMembers > maxMember) 
+        throw new BadRequestException('정원 초과!')
     }
 
     //update member database
