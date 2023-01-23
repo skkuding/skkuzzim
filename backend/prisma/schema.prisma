@@ -13,7 +13,7 @@ datasource db {
 model Reservation {
   id         Int      @id @default(autoincrement())
   creator    String
-  club       String
+  club       Club
   startTime  DateTime @map("start_time")
   endTime    DateTime @map("end_time")
   purpose    String
@@ -32,4 +32,9 @@ model Member {
   username      String
 
   @@map("member")
+}
+
+enum Club {
+  skkuding
+  skkud
 }
