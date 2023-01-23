@@ -1,16 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { GetAllReservationDTO } from './dto/getAllReservation.dto'
+import { RespondGetAllReservationRequestDTO } from './dto/respondGetAllReservationRequest.dto'
 
 const HALF_HOUR = 30 * 60 * 1000
-
-type getAllReservationsResponseDTO = {
-  startTime: Date
-  endTime: Date
-  skkuding: number
-  skkud: number
-  isFull: boolean
-}
 
 @Injectable()
 export class ReservationService {
@@ -18,7 +11,7 @@ export class ReservationService {
 
   async getAllReservations(
     reservationDTO: GetAllReservationDTO
-  ): Promise<getAllReservationsResponseDTO[]> {
+  ): Promise<RespondGetAllReservationRequestDTO[]> {
     const { startTime, endTime } = reservationDTO
     const result = await this.prismaService.reservation.findMany({
       where: {
@@ -85,7 +78,7 @@ export class ReservationService {
       }
     })
 
-    const mergedReservationList: getAllReservationsResponseDTO[] =
+    const mergedReservationList: RespondGetAllReservationRequestDTO[] =
       splitedReservationList.map((item, index, array) => {
         const overlabedReservations = array.filter(
           (value) => value.startTime.getTime() === item.startTime.getTime()
@@ -113,8 +106,10 @@ export class ReservationService {
         }
       })
 
-    const mergedReservationMap: Map<string, getAllReservationsResponseDTO> =
-      new Map()
+    const mergedReservationMap: Map<
+      string,
+      RespondGetAllReservationRequestDTO
+    > = new Map()
     mergedReservationList.forEach((item) => {
       mergedReservationMap.set(JSON.stringify(item), item)
     })
