@@ -14,13 +14,13 @@ type getAllReservationsResponseDTO = {
 
 @Injectable()
 export class ReservationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async getAllReservations(
     reservationDTO: GetAllReservationDTO
   ): Promise<getAllReservationsResponseDTO[]> {
     const { startTime, endTime } = reservationDTO
-    const result = await this.prisma.reservation.findMany({
+    const result = await this.prismaService.reservation.findMany({
       where: {
         OR: [
           {
