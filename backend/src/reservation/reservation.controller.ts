@@ -1,6 +1,6 @@
 import { Body, Controller, Param, Patch } from '@nestjs/common'
 import { ParseIntPipe } from '@nestjs/common/pipes'
-import { UpdateReservationDto } from './reservation.dto'
+import { UpdateReservationDto } from './dto/updateReservation.dto'
 import { ReservationService } from './reservation.service'
 
 @Controller('reservation')
