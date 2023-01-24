@@ -1,4 +1,4 @@
-import { UpdateReservationDto } from './reservation.dto'
+import { UpdateReservationDto } from './dto/updateReservation.dto'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 
