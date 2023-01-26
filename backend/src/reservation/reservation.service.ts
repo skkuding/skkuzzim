@@ -227,29 +227,21 @@ export class ReservationService {
       where: {
         OR: [
           {
-            startTime: {
-              gte: new Date(startTime),
-              lte: new Date(endTime)
-            }
-          },
-          {
-            endTime: {
-              gte: new Date(startTime),
-              lte: new Date(endTime)
-            }
+            AND: [
+              { startTime: { gte: new Date(startTime) } },
+              { startTime: { lt: new Date(endTime) } }
+            ]
           },
           {
             AND: [
-              {
-                startTime: {
-                  lte: new Date(startTime)
-                }
-              },
-              {
-                endTime: {
-                  gte: new Date(endTime)
-                }
-              }
+              { endTime: { gt: new Date(startTime) } },
+              { endTime: { lte: new Date(endTime) } }
+            ]
+          },
+          {
+            AND: [
+              { startTime: { lte: new Date(startTime) } },
+              { endTime: { gte: new Date(endTime) } }
             ]
           }
         ]
