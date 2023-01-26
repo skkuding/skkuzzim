@@ -2,19 +2,18 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import Button from './Button.vue';
+import { FONT_SIZE } from '@/styles/theme'
 const modal = ref(false)
 const modalRef = ref(null)
 
 onClickOutside(
   modalRef,
   (event) => {
-    console.log(event)
     modal.value = false
   },
 )
 defineProps<{
   title: string;
-  content?: string;
 }>()
 
 </script>
@@ -23,8 +22,8 @@ defineProps<{
   <button @click="modal = true">
     Open Modal
   </button>
-  <div v-if="modal" ref="modalRef" class="modal">
-    <div class="inner">
+  <div v-if="modal" class="modal">
+    <div class="inner" ref="modalRef">
       <p class="heading">
         {{ title }}
       </p>
@@ -42,11 +41,15 @@ defineProps<{
 <style scoped>
 .modal {
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   max-width: 100%;
-  z-index: 10;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .inner {
   background-color: white;
@@ -61,7 +64,7 @@ defineProps<{
 }
 .heading {
   font-weight: bold;
-  font-size: 1.4rem;
+  font-size: v-bind("FONT_SIZE.title");
 }
 #button-wrapper {
   display: flex;
