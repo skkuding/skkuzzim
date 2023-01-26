@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import MyComponent from "@/components/MyComponent.vue";
+import MyComponent from '@/components/MyComponent.vue'
 defineProps<{
-  id: string;
-}>();
+  id: string
+}>()
 </script>
 
 <template>
