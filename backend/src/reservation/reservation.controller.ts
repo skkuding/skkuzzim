@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common'
 import { CreateReservationRequestDto } from './dto/createReservation.dto'
 import { GetAllReservationDTO } from './dto/getAllReservation.dto'
+import { GetSpecificReservationRequestDTO } from './dto/getSpecificReservationRequest.dto'
 
 @Controller('reservation')
 export class ReservationController {
@@ -33,5 +34,12 @@ export class ReservationController {
   @Delete('/:id')
   async deleteReservation(@Param('id', ParseIntPipe) id: number) {
     return await this.reservationService.deleteReservation(id)
+  }
+
+  @Get('detail')
+  async getSpecificReservations(
+    @Query() reservationDTO: GetSpecificReservationRequestDTO
+  ) {
+    return await this.reservationService.getSpecificReservation(reservationDTO)
   }
 }
