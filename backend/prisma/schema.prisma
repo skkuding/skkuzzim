@@ -11,25 +11,25 @@ datasource db {
 }
 
 model Reservation {
-  id          Int       @id @default(autoincrement())
-  club        String
-  startTime   DateTime  @map("start_time")
-  endTime     DateTime  @map("end_time")
-  purpose     String    
-  createTime  DateTime  @default(now()) @map("create_time")
-  updateTime  DateTime  @updatedAt @map("update_time")
+  id         Int      @id @default(autoincrement())
+  creator    String
+  club       String
+  startTime  DateTime @map("start_time")
+  endTime    DateTime @map("end_time")
+  purpose    String
+  createTime DateTime @default(now()) @map("create_time")
+  updateTime DateTime @updatedAt @map("update_time")
 
-  member      Member[]
-  
+  member Member[]
+
   @@map("reservation")
 }
 
 model Member {
-  id              Int           @id @default(autoincrement())
-  reservation     Reservation   @relation(fields: [reservationId], references: [id])
-  reservationId   Int           @map("reservation_id")
-  username        String
+  id            Int         @id @default(autoincrement())
+  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  reservationId Int         @map("reservation_id")
+  username      String
 
   @@map("member")
 }
-
