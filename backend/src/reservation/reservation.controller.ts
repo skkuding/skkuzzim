@@ -9,6 +9,9 @@ export class ReservationController {
     @Query('startTime') startTime: string,
     @Query('endTime') endTime: string
   ) {
-    return await this.reservationService.getSpecificReservation(startTime, endTime)
+    return await this.reservationService.getSpecificReservation(
+      startTime,
+      endTime
+    )
   }
 }

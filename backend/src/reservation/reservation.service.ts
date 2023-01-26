@@ -21,13 +21,14 @@ export class ReservationService {
             }
           },
           {
-            AND:[
+            AND: [
               {
-                startTime:{
+                startTime: {
                   lte: new Date(start)
                 }
-              },{
-                endTime:{
+              },
+              {
+                endTime: {
                   gte: new Date(end)
                 }
               }
