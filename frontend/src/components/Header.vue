@@ -15,8 +15,12 @@ defineProps<{
         {{ dayTime }}
       </div>
       <div>
-        <a href="https://github.com/skkuding/skkuzzim" target="_blank">
-          <IconGithub class="letters" />
+        <a
+          href="https://github.com/skkuding/skkuzzim"
+          target="_blank"
+          class="letters"
+        >
+          <IconGithub />
         </a>
       </div>
     </div>
@@ -27,7 +31,7 @@ defineProps<{
 .header-wrapper {
   width: 100%;
   background: v-bind(
-    '`linear-gradient(90deg, ${COLOR[ "green"]}, ${COLOR[ "blue"]}) `'
+    '`linear-gradient(90deg, ${COLOR["green"]}, ${COLOR["blue"]}) `'
   );
   color: v-bind("TEXT_COLOR['white']");
   display: flex;
@@ -51,5 +55,9 @@ defineProps<{
   color: white;
   font-weight: bold;
   font-size: v-bind("FONT_SIZE['header']");
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 </style>

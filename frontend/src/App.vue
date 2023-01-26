@@ -3,7 +3,7 @@ import Header from "./components/Header.vue";
 </script>
 
 <template>
-  <Header dayTime="2023년 1월" class="header"></Header>
+  <Header dayTime="2023년 1월"></Header>
   <main class="wrapper">
     <router-view />
   </main>
