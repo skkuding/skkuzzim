@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import IconGithub from "~icons/fa6-brands/github";
+import { TEXT_COLOR } from "@/styles/theme";
+import { COLOR } from "@/styles/theme";
+import { FONT_SIZE } from "@/styles/theme";
 defineProps<{
   dayTime: string;
 }>();
@@ -7,10 +10,6 @@ defineProps<{
 
 <template>
   <header class="header-wrapper">
-    <!-- <div
-      class="letters"
-      v-if="startTime && endTime ? `${{ year }} year` : `${{ month }} month`"
-    ></div> -->
     <div class="header-content-wrapper">
       <div class="letters">
         {{ dayTime }}
@@ -27,15 +26,16 @@ defineProps<{
 <style scoped>
 .header-wrapper {
   width: 100%;
-  background: linear-gradient(90deg, #8dc63f, #3f9dc6);
-  color: white;
+  background: v-bind(
+    '`linear-gradient(90deg, ${COLOR[ "green"]}, ${COLOR[ "blue"]}) `'
+  );
+  color: v-bind("TEXT_COLOR['white']");
   display: flex;
   align-items: center;
   height: 80px;
   position: sticky;
   top: 0;
   margin: 0;
-  padding: 0 5rem;
 }
 .header-content-wrapper {
   width: 100%;
@@ -45,10 +45,11 @@ defineProps<{
   align-items: center;
   max-width: 80rem;
   margin: 0 auto;
+  padding: 0 5rem;
 }
 .letters {
   color: white;
   font-weight: bold;
-  font-size: 32px;
+  font-size: v-bind("FONT_SIZE['header']");
 }
 </style>
