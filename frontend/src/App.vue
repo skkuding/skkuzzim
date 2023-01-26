@@ -3,6 +3,7 @@
 </script>
 
 <template>
+  <!-- TODO: 헤더 컴포넌트 추가 -->
   <main class="wrapper">
     <router-view />
   </main>
