@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import IconGithub from "~icons/fa6-brands/github";
-import { TEXT_COLOR } from "@/styles/theme";
-import { COLOR } from "@/styles/theme";
-import { FONT_SIZE } from "@/styles/theme";
+import IconGithub from '~icons/fa6-brands/github'
+import { TEXT_COLOR } from '@/styles/theme'
+import { COLOR } from '@/styles/theme'
+import { FONT_SIZE } from '@/styles/theme'
 defineProps<{
-  dayTime: string;
-}>();
+  dayTime: string
+}>()
 </script>
 
 <template>
@@ -40,6 +40,7 @@ defineProps<{
   position: sticky;
   top: 0;
   margin: 0;
+  z-index: 100;
 }
 .header-content-wrapper {
   width: 100%;
