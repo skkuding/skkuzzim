@@ -317,7 +317,7 @@ export class ReservationService {
               lt: endTimeDate
             }
           }
-        ]
+        ],
         member: {
           select: {
             username: true
