@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import Header from "./components/Header.vue";
+import Header from './components/Header.vue'
+import { ref } from 'vue'
+const dayTime = ref('')
 </script>
 
 <template>
-  <Header dayTime="2023년 1월"></Header>
+  <Header :day-time="dayTime" />
   <main class="wrapper">
-    <router-view />
+    <router-view @day-time="(value: string) => (dayTime = value)" />
   </main>
 </template>
 
