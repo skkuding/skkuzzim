@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import IconRegularCircleCheck from "~icons/fa6-regular/circle-check";
+import IconCircleCheck from "~icons/fa6-regular/circle-check";
 defineProps<{
   msg: string;
 }>();
 </script>
 
 <template>
-  <div class="toastWrapper">
-    <IconRegularCircleCheck />
-    <div class="toastMessage">{{ msg }} 완료되었습니다!</div>
+  <div class="toast-wrapper">
+    <IconCircleCheck />
+    <p class="toast-message">{{ msg }}</p>
   </div>
 </template>
 
 <style scoped>
-.toastWrapper {
+.toast-wrapper {
   font-size: 20px;
   background-color: #8dc63f;
   padding: 10px;
   width: 250px;
-  border-radius: 20px;
+  border-radius: 8px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   color: white;
   align-items: center;
 }
-.toastMessage {
+.toast-message {
   color: white;
   padding: 5px;
   padding-left: 10px;

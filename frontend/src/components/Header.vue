@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IconBrandsGithub from "~icons/fa6-brands/github";
+import IconGithub from "~icons/fa6-brands/github";
 defineProps<{
   dayTime: string;
 }>();
@@ -17,7 +17,7 @@ defineProps<{
       </div>
       <div>
         <a href="https://github.com/skkuding/skkuzzim" target="_blank">
-          <IconBrandsGithub class="letters" />
+          <IconGithub class="letters" />
         </a>
       </div>
     </div>
