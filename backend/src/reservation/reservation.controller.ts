@@ -1,8 +1,16 @@
-import { CreateReservationRequestDto } from './reservation.dto'
 import { ReservationService } from './reservation.service'
-import { Controller, Get, Query, Post, Body } from '@nestjs/common'
+import {
+  Controller,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Get,
+  Query,
+  Post,
+  Body
+} from '@nestjs/common'
+import { CreateReservationRequestDto } from './dto/createReservation.dto'
 import { GetAllReservationDTO } from './dto/getAllReservation.dto'
-import { ReservationService } from './reservation.service'
 
 @Controller('reservation')
 export class ReservationController {
@@ -20,5 +28,10 @@ export class ReservationController {
     return await this.reservationService.createReservation(
       createReservationParams
     )
+  }
+
+  @Delete('/:id')
+  async deleteReservation(@Param('id', ParseIntPipe) id: number) {
+    return await this.reservationService.deleteReservation(id)
   }
 }

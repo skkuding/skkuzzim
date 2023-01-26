@@ -207,4 +207,13 @@ export class ReservationService {
       members: getReservationMember.map((name) => name.username)
     }
   }
+
+  async deleteReservation(id: number) {
+    // reservation 삭제
+    return await this.prismaService.reservation.delete({
+      where: {
+        id
+      }
+    })
+  }
 }
