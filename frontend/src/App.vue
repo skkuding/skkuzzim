@@ -15,10 +15,4 @@
   padding-left: 5rem;
   padding-right: 5rem;
 }
-#modal-content-test {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
-}
 </style>

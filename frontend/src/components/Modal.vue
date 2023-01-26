@@ -3,13 +3,13 @@ import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import Button from './Button.vue';
 import { FONT_SIZE } from '@/styles/theme'
-const modal = ref(false)
+const show = ref(false)
 const modalRef = ref(null)
 
 onClickOutside(
   modalRef,
   (event) => {
-    modal.value = false
+    show.value = false
   },
 )
 defineProps<{
@@ -19,10 +19,7 @@ defineProps<{
 </script>
 
 <template>
-  <button @click="modal = true">
-    Open Modal
-  </button>
-  <div v-if="modal" class="modal">
+  <div v-if="show" class="modal">
     <div class="inner" ref="modalRef">
       <p class="heading">
         {{ title }}
