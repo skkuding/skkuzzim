@@ -7,11 +7,14 @@ import {
   Get,
   Query,
   Post,
+  Patch,
   Body
 } from '@nestjs/common'
 import { CreateReservationRequestDto } from './dto/createReservation.dto'
 import { GetAllReservationDTO } from './dto/getAllReservation.dto'
 import { GetSpecificReservationRequestDTO } from './dto/getSpecificReservationRequest.dto'
+import { UpdateReservationDto } from './dto/updateReservation.dto'
+import { ParseIntPipe } from '@nestjs/common/pipes'
 
 @Controller('reservation')
 export class ReservationController {
@@ -41,5 +44,16 @@ export class ReservationController {
     @Query() reservationDTO: GetSpecificReservationRequestDTO
   ) {
     return await this.reservationService.getSpecificReservation(reservationDTO)
+  }
+
+  @Patch(':id')
+  async reserveUpdate(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateReservationParams: UpdateReservationDto
+  ) {
+    return await this.reservationService.updateReservation(
+      id,
+      updateReservationParams
+    )
   }
 }
