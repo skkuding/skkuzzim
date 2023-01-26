@@ -19,6 +19,19 @@ export class ReservationService {
               gte: new Date(start),
               lte: new Date(end)
             }
+          },
+          {
+            AND:[
+              {
+                startTime:{
+                  lte: new Date(start)
+                }
+              },{
+                endTime:{
+                  gte: new Date(end)
+                }
+              }
+            ]
           }
         ]
       },
@@ -52,7 +65,7 @@ export class ReservationService {
           startTime: item.startTime,
           endTime: item.endTime,
           purpose: item.purpose,
-          member: member
+          members: member
         }
       })
     }
