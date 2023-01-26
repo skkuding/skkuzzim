@@ -28,10 +28,10 @@ defineProps<{
       <p class="heading">
         {{ title }}
       </p>
-      <div id="contentContainer">
+      <div id="content-container">
         <slot />
       </div>
-      <div id="buttonContainer">
+      <div id="button-container">
         <Button color="red">취소</Button>
         <Button color="green">생성</Button>
       </div>
@@ -63,19 +63,15 @@ defineProps<{
   font-weight: bold;
   font-size: 1.4rem;
 }
-#buttonContainer {
+#button-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
-#contentContainer {
+#content-container {
   margin: 20px;
 }
 Button {
   margin: 0 15px;
-}
-input {
-  border: none;
-  border-bottom: 1px solid black;
 }
 </style>

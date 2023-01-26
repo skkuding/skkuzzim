@@ -6,7 +6,7 @@ import Modal from './components/Modal.vue'
 <template>
   <!-- TODO: 헤더 컴포넌트 추가 -->
   <Modal title="예약자 정보 수정">
-    <div id="modalContentTest">
+    <div id="modal-content-test">
       <!-- slot에 임시로 넣어둔 content -->
       <div>
         <label for="name">예약자 이름</label>
@@ -30,7 +30,7 @@ import Modal from './components/Modal.vue'
   padding-left: 5rem;
   padding-right: 5rem;
 }
-#modalContentTest {
+#modal-content-test {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
