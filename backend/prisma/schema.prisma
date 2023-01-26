@@ -25,7 +25,7 @@ model Member {
   id            Int         @id @default(autoincrement())
   reservationId Int         @map("reservation_id")
   username      String
-  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 
   @@map("member")
 }

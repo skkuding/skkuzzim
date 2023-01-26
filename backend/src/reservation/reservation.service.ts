@@ -6,18 +6,6 @@ export class ReservationService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async deleteReservation(id: number) {
-    // relation 해제, member 삭제
-    await this.prismaService.reservation.update({
-      where: {
-        id
-      },
-      data: {
-        member: {
-          deleteMany: {}
-        }
-      }
-    })
-
     // reservation 삭제
     await this.prismaService.reservation.delete({
       where: {
