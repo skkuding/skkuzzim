@@ -116,4 +116,13 @@ export class ReservationService {
 
     return new Array(...mergedReservationMap.values())
   }
+
+  async deleteReservation(id: number) {
+    // reservation 삭제
+    return await this.prismaService.reservation.delete({
+      where: {
+        id
+      }
+    })
+  }
 }
