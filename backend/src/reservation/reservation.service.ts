@@ -283,7 +283,7 @@ export class ReservationService {
     }
     return results
   }
-  
+
   async updateReservation(
     idWeFind: number,
     updateReservationParams: UpdateReservationDto
@@ -295,13 +295,13 @@ export class ReservationService {
     const startTimeDate = new Date(startTime)
     const endTimeDate = new Date(endTime)
     const maxMember = 8
-    
+
     if (
       (startTimeDate.getMinutes() !== 30 && startTimeDate.getMinutes() !== 0) ||
       (endTimeDate.getMinutes() !== 30 && endTimeDate.getMinutes() !== 0)
     )
       throw new BadRequestException('Please check the time format!')
-    
+
     //check reservation overlaps
     const reservationOverlap = await this.prismaService.reservation.findMany({
       where: {
@@ -317,19 +317,19 @@ export class ReservationService {
               lt: endTimeDate
             }
           }
-        ],
+        ]
+      },
+      select: {
+        startTime: true,
+        endTime: true,
         member: {
           select: {
             username: true
           }
-        },
-        select: {
-          startTime: true,
-          endTime: true,
-          }
         }
+      }
     })
-      
+
     for (
       let timeBlockstart = new Date(startTime);
       timeBlockstart < endTimeDate;
@@ -344,7 +344,7 @@ export class ReservationService {
           reservedMembers += eachReservation.member.length
         }
       })
-      if (reservedMembers > maxMember) 
+      if (reservedMembers > maxMember)
         throw new BadRequestException('정원 초과!')
     }
 
@@ -372,8 +372,8 @@ export class ReservationService {
       data: {
         creator: creator,
         club: club,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: startTimeDate,
+        endTime: endTimeDate,
         purpose: purpose
       }
     })
