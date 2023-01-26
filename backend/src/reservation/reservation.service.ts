@@ -9,7 +9,7 @@ export class ReservationService {
     // relation 해제, member 삭제
     await this.prismaService.reservation.update({
       where: {
-        id: Number(id)
+        id
       },
       data: {
         member: {
@@ -21,7 +21,7 @@ export class ReservationService {
     // reservation 삭제
     await this.prismaService.reservation.delete({
       where: {
-        id: Number(id)
+        id
       }
     })
 
