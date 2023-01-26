@@ -14,7 +14,6 @@ import { CreateReservationRequestDto } from './dto/createReservation.dto'
 import { GetAllReservationDTO } from './dto/getAllReservation.dto'
 import { GetSpecificReservationRequestDTO } from './dto/getSpecificReservationRequest.dto'
 import { UpdateReservationDto } from './dto/updateReservation.dto'
-import { ParseIntPipe } from '@nestjs/common/pipes'
 
 @Controller('reservation')
 export class ReservationController {
