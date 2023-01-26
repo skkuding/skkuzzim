@@ -14,11 +14,15 @@ onClickOutside(
 )
 defineProps<{
   title: string;
+  buttonMsg: string;
 }>()
 
 </script>
 
 <template>
+  <button @click="show = true">
+    {{buttonMsg}}
+  </button>
   <div v-if="show" class="modal">
     <div class="inner" ref="modalRef">
       <h1 class="heading">
