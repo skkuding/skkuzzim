@@ -21,12 +21,10 @@ defineProps<{
 <template>
   <div v-if="show" class="modal">
     <div class="inner" ref="modalRef">
-      <p class="heading">
+      <head class="heading">
         {{ title }}
-      </p>
-      <div id="content-wrapper">
-        <slot />
-      </div>
+      </head>
+      <slot />
       <div id="button-wrapper">
         <Button color="red">취소</Button>
         <Button color="green">생성</Button>
@@ -58,6 +56,7 @@ defineProps<{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 425px;
 }
 .heading {
   font-weight: bold;
@@ -67,9 +66,6 @@ defineProps<{
   display: flex;
   flex-direction: row;
   justify-content: center;
-}
-#content-wrapper {
-  margin: 20px;
 }
 Button {
   margin: 0 15px;
