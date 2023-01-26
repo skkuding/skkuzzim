@@ -2,6 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateReservationRequestDto } from './dto/createReservation.dto'
 import { GetAllReservationDTO } from './dto/getAllReservation.dto'
+import { GetSpecificReservationResponseDTO } from './dto/getSpecificReservaionResponse.dto'
+import { GetSpecificReservationRequestDTO } from './dto/getSpecificReservationRequest.dto'
 import { RespondGetAllReservationRequestDTO } from './dto/respondGetAllReservationRequest.dto'
 
 const HALF_HOUR = 30 * 60 * 1000
@@ -216,32 +218,36 @@ export class ReservationService {
       }
     })
   }
-  async getSpecificReservation(start: string, end: string) {
+
+  async getSpecificReservation(
+    reservationDTO: GetSpecificReservationRequestDTO
+  ): Promise<GetSpecificReservationResponseDTO> {
+    const { startTime, endTime } = reservationDTO
     const rawData = await this.prismaService.reservation.findMany({
       where: {
         OR: [
           {
             startTime: {
-              gte: new Date(start),
-              lte: new Date(end)
+              gte: new Date(startTime),
+              lte: new Date(endTime)
             }
           },
           {
             endTime: {
-              gte: new Date(start),
-              lte: new Date(end)
+              gte: new Date(startTime),
+              lte: new Date(endTime)
             }
           },
           {
             AND: [
               {
                 startTime: {
-                  lte: new Date(start)
+                  lte: new Date(startTime)
                 }
               },
               {
                 endTime: {
-                  gte: new Date(end)
+                  gte: new Date(endTime)
                 }
               }
             ]

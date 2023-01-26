@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common'
 import { CreateReservationRequestDto } from './dto/createReservation.dto'
 import { GetAllReservationDTO } from './dto/getAllReservation.dto'
+import { GetSpecificReservationRequestDTO } from './dto/getSpecificReservationRequest.dto'
 
 @Controller('reservation')
 export class ReservationController {
@@ -35,15 +36,10 @@ export class ReservationController {
     return await this.reservationService.deleteReservation(id)
   }
 
-  constructor(private readonly reservationService: ReservationService) {}
   @Get('detail')
   async getSpecificReservations(
-    @Query('startTime') startTime: string,
-    @Query('endTime') endTime: string
+    @Query() reservationDTO: GetSpecificReservationRequestDTO
   ) {
-    return await this.reservationService.getSpecificReservation(
-      startTime,
-      endTime
-    )
+    return await this.reservationService.getSpecificReservation(reservationDTO)
   }
 }
