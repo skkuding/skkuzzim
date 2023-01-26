@@ -21,9 +21,9 @@ defineProps<{
 <template>
   <div v-if="show" class="modal">
     <div class="inner" ref="modalRef">
-      <head class="heading">
+      <h1 class="heading">
         {{ title }}
-      </head>
+      </h1>
       <slot />
       <div id="button-wrapper">
         <Button color="red">취소</Button>
