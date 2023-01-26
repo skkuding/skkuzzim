@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import MyComponent from "@/components/MyComponent.vue";
-import { COLOR } from "@/styles/theme";
+import MyComponent from '@/components/MyComponent.vue'
+import { COLOR } from '@/styles/theme'
 </script>
 
 <template>
@@ -10,6 +10,6 @@ import { COLOR } from "@/styles/theme";
 
 <style scoped>
 .colored {
-  color: v-bind("COLOR.red");
+  color: v-bind('COLOR.red');
 }
 </style>
