@@ -119,14 +119,10 @@ export class ReservationService {
 
   async deleteReservation(id: number) {
     // reservation 삭제
-    await this.prismaService.reservation.delete({
+    return await this.prismaService.reservation.delete({
       where: {
         id
       }
     })
-
-    return {
-      'reservation id': id
-    }
   }
 }
