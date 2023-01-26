@@ -20,7 +20,7 @@ defineProps<{
           target="_blank"
           class="letters"
         >
-          <IconGithub />
+          <IconGithub class="letters" />
         </a>
       </div>
     </div>
