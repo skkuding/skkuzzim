@@ -22,8 +22,8 @@ const dates = computed(() => {
   monday.setMilliseconds(0)
   const sunday = new Date(monday)
   sunday.setDate(sunday.getDate() + 6)
-  sunday.setHours(23)
-  sunday.setMinutes(59)
+  sunday.setHours(24)
+  sunday.setMinutes(0)
   sunday.setSeconds(0)
   sunday.setMilliseconds(0)
   return {
