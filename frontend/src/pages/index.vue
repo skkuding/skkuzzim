@@ -4,6 +4,7 @@ import Button from '@/components/Button.vue'
 import TimeBlock from '@/components/TimeBlock.vue'
 import TextInput from '@/components/TextInput.vue'
 import RadioGroup from '@/components/RadioGroup.vue'
+import Modal from '@/components/Modal.vue'
 import IconChevronLeft from '~icons/fa6-solid/chevron-left'
 import IconChevronRight from '~icons/fa6-solid/chevron-right'
 import IconPlus from '~icons/fa6-solid/plus'
@@ -78,7 +79,7 @@ const endTime = computed(() =>
     .concat('Z')
 )
 
-// response example
+// response example (test, 머지하기 전 지울 것)
 const data = [
   {
     startTime: '2023-01-26T16:00:00.000Z',
@@ -160,32 +161,37 @@ const onConfirm = () => {
         </RouterLink>
       </template>
     </Table>
-    <Button color="green" class="create-button">
+    <Button color="green" class="create-button" @click="showModal = true">
       <IconPlus />
       생성
     </Button>
-    <!-- Modal -->
-    <form>
-      <label>
-        <span>이름</span>
-        <TextInput
-          v-model="reservation.creator"
-          :message="inputMessage.creator"
-        />
-      </label>
-      <label>
-        <span>인원</span>
-        <TextInput
-          v-model="reservation.memberCnt"
-          :message="inputMessage.memberCnt"
-        />
-      </label>
-      <label>
-        <span>소속</span>
-        <RadioGroup v-model="reservation.club" :values="store.clubs" />
-      </label>
-    </form>
-    <button @click="onConfirm">확인</button>
+    <Modal
+      v-model="showModal"
+      title="예약자 정보 입력"
+      @confirm="onConfirm"
+      @cancel="onCancel"
+    >
+      <form>
+        <label>
+          <span>이름</span>
+          <TextInput
+            v-model="reservation.creator"
+            :message="inputMessage.creator"
+          />
+        </label>
+        <label>
+          <span>인원</span>
+          <TextInput
+            v-model="reservation.memberCnt"
+            :message="inputMessage.memberCnt"
+          />
+        </label>
+        <label>
+          <span>소속</span>
+          <RadioGroup v-model="reservation.club" :values="store.clubs" />
+        </label>
+      </form>
+    </Modal>
   </div>
 </template>
 
@@ -234,7 +240,8 @@ const onConfirm = () => {
 form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
+  margin: 1rem 0;
 }
 label {
   display: flex;
