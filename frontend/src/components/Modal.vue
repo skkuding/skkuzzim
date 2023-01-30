@@ -22,7 +22,9 @@ defineEmits<{
         <h1 class="title">
           {{ title }}
         </h1>
-        <slot />
+        <div class="content">
+          <slot />
+        </div>
         <div class="button-wrapper">
           <Button
             color="red"
@@ -63,7 +65,7 @@ defineEmits<{
   box-shadow: 2px 2px 10px rgba(10, 10, 10, 0.1);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  margin-top: 0.5rem;
   align-items: center;
   width: 428px;
   min-height: 16rem;
@@ -72,6 +74,10 @@ defineEmits<{
 .title {
   font-weight: bold;
   font-size: v-bind('FONT_SIZE.title');
+}
+.content {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 .button-wrapper {
   display: flex;
