@@ -45,6 +45,8 @@ export const useReservationStore = defineStore('reservation', () => {
         return '예약 인원을 입력해주세요'
       } else if (Number.isNaN(Number(reservation.value.memberCnt))) {
         return '숫자만 입력해주세요'
+      } else if (Number(reservation.value.memberCnt) > 8) {
+        return '8 이하의 숫자만 입력해주세요'
       } else {
         return ''
       }
@@ -68,7 +70,6 @@ export const useReservationStore = defineStore('reservation', () => {
     (value) => {
       if (!Number.isNaN(Number(value))) {
         reservation.value.members = Array(Number(value)).fill('')
-        console.log(reservation.value.members)
       }
     }
   )
