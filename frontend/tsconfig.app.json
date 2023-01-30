@@ -7,6 +7,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "lib": ["ES2017", "DOM", "DOM.Iterable"]
   }
 }
