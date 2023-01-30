@@ -4,7 +4,8 @@ import { computed } from 'vue'
 import { COLOR } from '@/styles/theme'
 import Button from './Button.vue'
 import IconCircle from '~icons/fa6-solid/circle'
-const props = defineProps<{
+
+type Item = {
   id: number
   creator: string
   club: 'skkuding' | 'skkud'
@@ -12,6 +13,10 @@ const props = defineProps<{
   endTime: Date
   members: string[]
   purpose?: string
+}
+
+const props = defineProps<{
+  item: Item
 }>()
 
 defineEmits<{
@@ -21,9 +26,9 @@ defineEmits<{
 
 const period = computed(() => {
   return (
-    useDateFormat(props.startTime, 'HH:mm').value +
+    useDateFormat(props.item.startTime, 'HH:mm').value +
     '~' +
-    useDateFormat(props.endTime, 'HH:mm').value
+    useDateFormat(props.item.endTime, 'HH:mm').value
   )
 })
 </script>
@@ -36,33 +41,35 @@ const period = computed(() => {
         <p class="period">{{ period }}</p>
       </div>
       <div>
-        <p class="purpose">{{ purpose || creator }}</p>
-        <p class="member-cnt">{{ members.length }} 명</p>
+        <p class="purpose">{{ item.purpose || item.creator }}</p>
+        <p class="member-cnt">{{ item.members.length }} 명</p>
         <div class="button-box">
-          <Button color="green" @click="$emit('edit', id)">수정</Button>
-          <Button color="dark-red" @click="$emit('remove', id)">삭제</Button>
+          <Button color="green" @click="$emit('edit', item.id)">수정</Button>
+          <Button color="dark-red" @click="$emit('remove', item.id)">
+            삭제
+          </Button>
         </div>
       </div>
     </div>
-    <div class="list-content" v-if="members.length !== 1">
+    <div class="list-content" v-if="item.members.length !== 1">
       <div>
         <div class="label">
           <span>소속</span>
         </div>
-        <span>{{ club }}</span>
+        <span>{{ item.club }}</span>
       </div>
       <div>
         <div class="label">
           <span>예약자</span>
         </div>
-        <span>{{ creator }}</span>
+        <span>{{ item.creator }}</span>
       </div>
       <div>
         <div class="label">
           <span>참가자</span>
         </div>
         <div class="member-list">
-          <span v-for="member in members" :key="member">
+          <span v-for="member in item.members" :key="member">
             {{ member }}
           </span>
         </div>
@@ -151,7 +158,7 @@ button {
 .circle-icon {
   width: 20px;
   height: 20px;
-  color: v-bind("club === 'skkuding' ? COLOR.green : COLOR.blue");
+  color: v-bind("item.club === 'skkuding' ? COLOR.green : COLOR.blue");
   flex-shrink: 0;
 }
 </style>
