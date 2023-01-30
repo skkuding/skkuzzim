@@ -2,7 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateReservationRequestDto } from './dto/createReservation.dto'
 import { GetAllReservationDTO } from './dto/getAllReservation.dto'
+import { GetSpecificReservationResponseDTO } from './dto/getSpecificReservaionResponse.dto'
+import { GetSpecificReservationRequestDTO } from './dto/getSpecificReservationRequest.dto'
 import { RespondGetAllReservationRequestDTO } from './dto/respondGetAllReservationRequest.dto'
+import { UpdateReservationDto } from './dto/updateReservation.dto'
 
 const HALF_HOUR = 30 * 60 * 1000
 
@@ -215,5 +218,169 @@ export class ReservationService {
         id
       }
     })
+  }
+
+  async getSpecificReservation(
+    reservationDTO: GetSpecificReservationRequestDTO
+  ): Promise<GetSpecificReservationResponseDTO> {
+    const { startTime, endTime } = reservationDTO
+    const rawData = await this.prismaService.reservation.findMany({
+      where: {
+        OR: [
+          {
+            AND: [
+              { startTime: { gte: new Date(startTime) } },
+              { startTime: { lt: new Date(endTime) } }
+            ]
+          },
+          {
+            AND: [
+              { endTime: { gt: new Date(startTime) } },
+              { endTime: { lte: new Date(endTime) } }
+            ]
+          },
+          {
+            AND: [
+              { startTime: { lte: new Date(startTime) } },
+              { endTime: { gte: new Date(endTime) } }
+            ]
+          }
+        ]
+      },
+      select: {
+        id: true,
+        creator: true,
+        purpose: true,
+        startTime: true,
+        endTime: true,
+        club: true,
+        member: {
+          select: {
+            username: true
+          }
+        }
+      },
+      orderBy: {
+        startTime: 'asc'
+      }
+    })
+    const results = {
+      total: rawData.length,
+      data: rawData.map((item) => {
+        const member = item.member.map((element) => {
+          return element.username
+        })
+        return {
+          id: item.id,
+          creator: item.creator,
+          club: item.club,
+          startTime: item.startTime,
+          endTime: item.endTime,
+          purpose: item.purpose,
+          members: member
+        }
+      })
+    }
+    return results
+  }
+
+  async updateReservation(
+    idWeFind: number,
+    updateReservationParams: UpdateReservationDto
+  ) {
+    const { creator, club, startTime, endTime, purpose, members } =
+      updateReservationParams
+
+    //check startTime and endTime
+    const startTimeDate = new Date(startTime)
+    const endTimeDate = new Date(endTime)
+    const maxMember = 8
+
+    if (
+      (startTimeDate.getMinutes() !== 30 && startTimeDate.getMinutes() !== 0) ||
+      (endTimeDate.getMinutes() !== 30 && endTimeDate.getMinutes() !== 0)
+    )
+      throw new BadRequestException('Please check the time format!')
+
+    //check reservation overlaps
+    const reservationOverlap = await this.prismaService.reservation.findMany({
+      where: {
+        NOT: [{ id: idWeFind }],
+        AND: [
+          {
+            endTime: {
+              gt: startTimeDate
+            }
+          },
+          {
+            startTime: {
+              lt: endTimeDate
+            }
+          }
+        ]
+      },
+      select: {
+        startTime: true,
+        endTime: true,
+        member: {
+          select: {
+            username: true
+          }
+        }
+      }
+    })
+
+    for (
+      let timeBlockstart = new Date(startTime);
+      timeBlockstart < endTimeDate;
+      timeBlockstart.setMinutes(timeBlockstart.getMinutes() + 30)
+    ) {
+      let reservedMembers = members.length
+      reservationOverlap.map((eachReservation) => {
+        if (
+          timeBlockstart >= eachReservation.startTime &&
+          timeBlockstart < eachReservation.endTime
+        ) {
+          reservedMembers += eachReservation.member.length
+        }
+      })
+      if (reservedMembers > maxMember)
+        throw new BadRequestException('정원 초과!')
+    }
+
+    //update member database
+    const dataArray = members.map((member) => {
+      return { reservationId: idWeFind, username: member }
+    })
+
+    await this.prismaService.member.deleteMany({
+      where: {
+        reservationId: {
+          equals: idWeFind
+        }
+      }
+    })
+    await this.prismaService.member.createMany({
+      data: dataArray
+    })
+
+    //update reservation database
+    const reservationUpdate = await this.prismaService.reservation.update({
+      where: {
+        id: idWeFind
+      },
+      data: {
+        creator: creator,
+        club: club,
+        startTime: startTimeDate,
+        endTime: endTimeDate,
+        purpose: purpose
+      }
+    })
+
+    return {
+      ...reservationUpdate,
+      members
+    }
   }
 }
