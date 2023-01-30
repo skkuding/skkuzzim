@@ -2,11 +2,16 @@
 import Table from '@/components/Table.vue'
 import Button from '@/components/Button.vue'
 import TimeBlock from '@/components/TimeBlock.vue'
-import { computed, ref, watch } from 'vue'
-import { RouterLink } from 'vue-router'
-import { useDateFormat } from '@vueuse/core'
 import IconChevronLeft from '~icons/fa6-solid/chevron-left'
 import IconChevronRight from '~icons/fa6-solid/chevron-right'
+import { computed, ref, watch } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { useDateFormat } from '@vueuse/core'
+import { useReservationStore } from '@/stores/reservation'
+import { storeToRefs } from 'pinia'
+import TextInput from '@/components/TextInput.vue'
+import RadioGroup from '@/components/RadioGroup.vue'
+import { FONT_SIZE } from '@/styles/theme'
 
 const week = ref(0)
 const dates = computed(() => {
@@ -89,6 +94,32 @@ const data = [
     isFull: false
   }
 ]
+
+// modal form
+const router = useRouter()
+const store = useReservationStore()
+const { reservation } = storeToRefs(store)
+const inputMessage = ref({
+  creator: '',
+  memberCnt: ''
+})
+const onCancel = () => {
+  store.reset()
+  inputMessage.value = {
+    creator: '',
+    memberCnt: ''
+  }
+}
+const onConfirm = () => {
+  inputMessage.value.creator = store.validate('creator') as string
+  inputMessage.value.memberCnt = store.validate('memberCnt') as string
+  if (
+    inputMessage.value.creator === '' &&
+    inputMessage.value.memberCnt === ''
+  ) {
+    router.push('/select')
+  }
+}
 </script>
 
 <template>
@@ -122,6 +153,30 @@ const data = [
       </template>
     </Table>
     <!-- Modal -->
+    <div class="modal-slot-wrapper">
+      <h1>예약자 정보 입력</h1>
+      <form>
+        <label>
+          <span>이름</span>
+          <TextInput
+            v-model="reservation.creator"
+            :message="inputMessage.creator"
+          />
+        </label>
+        <label>
+          <span>인원</span>
+          <TextInput
+            v-model="reservation.memberCnt"
+            :message="inputMessage.memberCnt"
+          />
+        </label>
+        <label>
+          <span>소속</span>
+          <RadioGroup v-model="reservation.club" :values="store.clubs" />
+        </label>
+      </form>
+      <button @click="onConfirm">확인</button>
+    </div>
   </div>
 </template>
 
@@ -157,5 +212,20 @@ const data = [
 }
 .block-wrapper > div {
   min-width: 15px;
+}
+.modal-slot-wrapper h1 {
+  margin-bottom: 2rem;
+  font-weight: bold;
+  font-size: v-bind('FONT_SIZE.title');
+  text-align: center;
+}
+.modal-slot-wrapper form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.modal-slot-wrapper label {
+  display: flex;
+  gap: 2rem;
 }
 </style>
