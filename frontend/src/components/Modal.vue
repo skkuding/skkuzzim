@@ -1,73 +1,87 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { onClickOutside } from '@vueuse/core'
-import Button from './Button.vue';
-import { FONT_SIZE } from '@/styles/theme'
-const show = ref(false)
-const modalRef = ref(null)
+import Button from './Button.vue'
+import { OnClickOutside } from '@vueuse/components'
+import { FONT_SIZE, COLOR } from '@/styles/theme'
 
-onClickOutside(
-  modalRef,
-  (event) => {
-    show.value = false
-  },
-)
 defineProps<{
-  title: string;
+  title: string
+  modelValue: boolean
 }>()
 
+defineEmits<{
+  (e: 'update:modelValue', modelValue: boolean): void
+  (e: 'cancel', value: void): void
+  (e: 'confirm', value: void): void
+}>()
 </script>
 
 <template>
-  <div v-if="show" class="modal">
-    <div class="inner" ref="modalRef">
-      <h1 class="heading">
-        {{ title }}
-      </h1>
-      <slot />
-      <div id="button-wrapper">
-        <Button color="red">취소</Button>
-        <Button color="green">생성</Button>
+  <div v-if="modelValue" class="modal-wrapper">
+    <OnClickOutside @trigger="$emit('update:modelValue', false)">
+      <div class="modal-container">
+        <h1 class="title">
+          {{ title }}
+        </h1>
+        <div class="content">
+          <slot />
+        </div>
+        <div class="button-wrapper">
+          <Button
+            color="red"
+            @click="$emit('cancel'), $emit('update:modelValue', false)"
+          >
+            취소
+          </Button>
+          <Button
+            color="green"
+            @click="$emit('confirm'), $emit('update:modelValue', false)"
+          >
+            확인
+          </Button>
+        </div>
       </div>
-    </div>
+    </OnClickOutside>
   </div>
 </template>
 
 <style scoped>
-.modal {
+.modal-wrapper {
   position: fixed;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
-  max-width: 100%;
+  width: 100%;
   background: rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.inner {
+.modal-container {
   background-color: white;
-  padding: 24px 48px;
-  border-radius: 5px;
-  border: 1px solid lightgrey;
+  padding: 1.5rem 3rem;
+  border-radius: 0.5rem;
+  border: 1px solid v-bind("COLOR['light-gray']");
   box-shadow: 2px 2px 10px rgba(10, 10, 10, 0.1);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  margin-top: 0.5rem;
   align-items: center;
-  width: 425px;
+  width: 428px;
+  min-height: 16rem;
+  z-index: 50;
 }
-.heading {
+.title {
   font-weight: bold;
-  font-size: v-bind("FONT_SIZE.title");
+  font-size: v-bind('FONT_SIZE.title');
 }
-#button-wrapper {
+.content {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.button-wrapper {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-Button {
-  margin: 0 15px;
+  justify-content: space-between;
+  width: 10rem;
 }
 </style>
