@@ -126,6 +126,7 @@ const onConfirm = () => {
     inputMessage.value.creator === '' &&
     inputMessage.value.memberCnt === ''
   ) {
+    showModal.value = false
     router.push('/select')
   }
 }
