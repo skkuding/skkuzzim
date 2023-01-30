@@ -8,9 +8,6 @@ import { useDateFormat } from '@vueuse/core'
 import IconChevronLeft from '~icons/fa6-solid/chevron-left'
 import IconChevronRight from '~icons/fa6-solid/chevron-right'
 
-const emit = defineEmits<{
-  (e: 'dayTime', value: string): void
-}>()
 const week = ref(0)
 const dates = computed(() => {
   const monday = new Date()
@@ -23,16 +20,31 @@ const dates = computed(() => {
   const sunday = new Date(monday)
   sunday.setDate(sunday.getDate() + 6)
   sunday.setHours(24)
-  sunday.setMinutes(0)
-  sunday.setSeconds(0)
-  sunday.setMilliseconds(0)
   return {
     monday,
     sunday
   }
 })
 
+// button click event handlers
+const weekHandler = (action: 'lastWeek' | 'today' | 'nextWeek') => {
+  switch (action) {
+    case 'lastWeek':
+      week.value -= 1
+      break
+    case 'today':
+      week.value = 0
+      break
+    case 'nextWeek':
+      week.value += 1
+      break
+  }
+}
+
 // header
+const emit = defineEmits<{
+  (e: 'dayTime', value: string): void
+}>()
 const dayTime = computed(
   () => useDateFormat(dates.value.monday, 'YYYY년 M월').value
 )
@@ -77,21 +89,6 @@ const data = [
     isFull: false
   }
 ]
-
-// button click event handlers
-const weekHandler = (action: 'lastWeek' | 'today' | 'nextWeek') => {
-  switch (action) {
-    case 'lastWeek':
-      week.value -= 1
-      break
-    case 'today':
-      week.value = 0
-      break
-    case 'nextWeek':
-      week.value += 1
-      break
-  }
-}
 </script>
 
 <template>
@@ -124,6 +121,7 @@ const weekHandler = (action: 'lastWeek' | 'today' | 'nextWeek') => {
         </RouterLink>
       </template>
     </Table>
+    <!-- Modal -->
   </div>
 </template>
 
