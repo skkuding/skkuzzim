@@ -185,6 +185,7 @@ const onConfirm = () => {
           <TextInput
             v-model="reservation.memberCnt"
             :message="inputMessage.memberCnt"
+            placeholder="예약자 포함 인원"
           />
         </label>
         <label>
