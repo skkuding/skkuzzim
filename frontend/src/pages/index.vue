@@ -2,16 +2,16 @@
 import Table from '@/components/Table.vue'
 import Button from '@/components/Button.vue'
 import TimeBlock from '@/components/TimeBlock.vue'
+import TextInput from '@/components/TextInput.vue'
+import RadioGroup from '@/components/RadioGroup.vue'
 import IconChevronLeft from '~icons/fa6-solid/chevron-left'
 import IconChevronRight from '~icons/fa6-solid/chevron-right'
+import IconPlus from '~icons/fa6-solid/plus'
 import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
-import TextInput from '@/components/TextInput.vue'
-import RadioGroup from '@/components/RadioGroup.vue'
-import { FONT_SIZE } from '@/styles/theme'
 
 const route = useRoute()
 const router = useRouter()
@@ -37,17 +37,17 @@ const dates = computed(() => {
 const weekHandler = (action: 'lastWeek' | 'today' | 'nextWeek') => {
   switch (action) {
     case 'lastWeek':
-      router.push(`/?week=${week.value - 1}`).then(() => {
+      router.replace(`/?week=${week.value - 1}`).then(() => {
         week.value -= 1
       })
       break
     case 'today':
-      router.push('/?week=0').then(() => {
+      router.replace('/?week=0').then(() => {
         week.value = 0
       })
       break
     case 'nextWeek':
-      router.push(`/?week=${week.value + 1}`).then(() => {
+      router.replace(`/?week=${week.value + 1}`).then(() => {
         week.value += 1
       })
       break
@@ -104,6 +104,7 @@ const data = [
 ]
 
 // modal form
+const showModal = ref(false)
 const store = useReservationStore()
 const { reservation } = storeToRefs(store)
 const inputMessage = ref({
@@ -159,31 +160,32 @@ const onConfirm = () => {
         </RouterLink>
       </template>
     </Table>
+    <Button color="green" class="create-button">
+      <IconPlus />
+      생성
+    </Button>
     <!-- Modal -->
-    <div class="modal-slot-wrapper">
-      <h1>예약자 정보 입력</h1>
-      <form>
-        <label>
-          <span>이름</span>
-          <TextInput
-            v-model="reservation.creator"
-            :message="inputMessage.creator"
-          />
-        </label>
-        <label>
-          <span>인원</span>
-          <TextInput
-            v-model="reservation.memberCnt"
-            :message="inputMessage.memberCnt"
-          />
-        </label>
-        <label>
-          <span>소속</span>
-          <RadioGroup v-model="reservation.club" :values="store.clubs" />
-        </label>
-      </form>
-      <button @click="onConfirm">확인</button>
-    </div>
+    <form>
+      <label>
+        <span>이름</span>
+        <TextInput
+          v-model="reservation.creator"
+          :message="inputMessage.creator"
+        />
+      </label>
+      <label>
+        <span>인원</span>
+        <TextInput
+          v-model="reservation.memberCnt"
+          :message="inputMessage.memberCnt"
+        />
+      </label>
+      <label>
+        <span>소속</span>
+        <RadioGroup v-model="reservation.club" :values="store.clubs" />
+      </label>
+    </form>
+    <button @click="onConfirm">확인</button>
   </div>
 </template>
 
@@ -220,19 +222,25 @@ const onConfirm = () => {
 .block-wrapper > div {
   min-width: 15px;
 }
-.modal-slot-wrapper h1 {
-  margin-bottom: 2rem;
-  font-weight: bold;
-  font-size: v-bind('FONT_SIZE.title');
-  text-align: center;
+.create-button {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-.modal-slot-wrapper form {
+form {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
-.modal-slot-wrapper label {
+label {
   display: flex;
   gap: 2rem;
+}
+label > div {
+  flex-grow: 1;
 }
 </style>
