@@ -5,7 +5,7 @@ import TimeBlock from '@/components/TimeBlock.vue'
 import IconChevronLeft from '~icons/fa6-solid/chevron-left'
 import IconChevronRight from '~icons/fa6-solid/chevron-right'
 import { computed, ref, watch } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
@@ -13,7 +13,9 @@ import TextInput from '@/components/TextInput.vue'
 import RadioGroup from '@/components/RadioGroup.vue'
 import { FONT_SIZE } from '@/styles/theme'
 
-const week = ref(0)
+const route = useRoute()
+const router = useRouter()
+const week = ref(route.query.week ? Number(route.query.week) : 0)
 const dates = computed(() => {
   const monday = new Date()
   const day = monday.getDay() || 7
@@ -35,13 +37,19 @@ const dates = computed(() => {
 const weekHandler = (action: 'lastWeek' | 'today' | 'nextWeek') => {
   switch (action) {
     case 'lastWeek':
-      week.value -= 1
+      router.push(`/?week=${week.value - 1}`).then(() => {
+        week.value -= 1
+      })
       break
     case 'today':
-      week.value = 0
+      router.push('/?week=0').then(() => {
+        week.value = 0
+      })
       break
     case 'nextWeek':
-      week.value += 1
+      router.push(`/?week=${week.value + 1}`).then(() => {
+        week.value += 1
+      })
       break
   }
 }
@@ -96,7 +104,6 @@ const data = [
 ]
 
 // modal form
-const router = useRouter()
 const store = useReservationStore()
 const { reservation } = storeToRefs(store)
 const inputMessage = ref({
