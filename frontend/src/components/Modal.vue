@@ -16,7 +16,7 @@ defineEmits<{
 </script>
 
 <template>
-  <div v-if="modelValue" class="modal-wraper">
+  <div v-if="modelValue" class="modal-wrapper">
     <OnClickOutside @trigger="$emit('update:modelValue', false)">
       <div class="modal-container">
         <h1 class="title">
@@ -45,7 +45,7 @@ defineEmits<{
 </template>
 
 <style scoped>
-.modal-wraper {
+.modal-wrapper {
   position: fixed;
   left: 0;
   top: 0;
