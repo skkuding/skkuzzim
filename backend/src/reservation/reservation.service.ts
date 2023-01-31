@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable
+} from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateReservationRequestDto } from './dto/createReservation.dto'
 import { GetAllReservationDTO } from './dto/getAllReservation.dto'
@@ -17,6 +22,11 @@ export class ReservationService {
     reservationDTO: GetAllReservationDTO
   ): Promise<RespondGetAllReservationRequestDTO[]> {
     const { startTime, endTime } = reservationDTO
+    const start = new Date(startTime)
+    const end = new Date(endTime)
+    if (start >= end) {
+      throw new HttpException('bad request', HttpStatus.BAD_REQUEST)
+    }
     const result = await this.prismaService.reservation.findMany({
       where: {
         OR: [
@@ -224,6 +234,11 @@ export class ReservationService {
     reservationDTO: GetSpecificReservationRequestDTO
   ): Promise<GetSpecificReservationResponseDTO> {
     const { startTime, endTime } = reservationDTO
+    const start = new Date(startTime)
+    const end = new Date(endTime)
+    if (start >= end) {
+      throw new HttpException('bad request', HttpStatus.BAD_REQUEST)
+    }
     const rawData = await this.prismaService.reservation.findMany({
       where: {
         OR: [
