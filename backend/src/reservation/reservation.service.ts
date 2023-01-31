@@ -25,7 +25,7 @@ export class ReservationService {
     const start = new Date(startTime)
     const end = new Date(endTime)
     if (start >= end) {
-      throw new HttpException('bad request', HttpStatus.BAD_REQUEST)
+      throw new BadRequestException()
     }
     const result = await this.prismaService.reservation.findMany({
       where: {
@@ -237,7 +237,7 @@ export class ReservationService {
     const start = new Date(startTime)
     const end = new Date(endTime)
     if (start >= end) {
-      throw new HttpException('bad request', HttpStatus.BAD_REQUEST)
+      throw new BadRequestException()
     }
     const rawData = await this.prismaService.reservation.findMany({
       where: {
