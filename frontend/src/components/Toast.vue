@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { FONT_SIZE } from "@/styles/theme";
-import { COLOR } from "@/styles/theme";
-import { TEXT_COLOR } from "@/styles/theme";
-import IconCircleCheck from "~icons/fa6-regular/circle-check";
+import { FONT_SIZE } from '@/styles/theme'
+import { COLOR } from '@/styles/theme'
+import { TEXT_COLOR } from '@/styles/theme'
+import IconCircleCheck from '~icons/fa6-regular/circle-check'
 defineProps<{
-  msg: string;
-}>();
+  msg: string
+}>()
 </script>
 
 <template>
@@ -31,7 +31,7 @@ defineProps<{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 100;
+  z-index: 300;
 }
 .toast-message {
   color: v-bind("TEXT_COLOR['white']");
