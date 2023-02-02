@@ -1,13 +1,13 @@
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 interface State {
   creator: string
-  club: string
+  club: 'SKKUDING' | 'SKKU.D'
   memberCnt: string
   startTime: string
   endTime: string
-  purpose: string
+  purpose?: string
   members: string[]
 }
 
@@ -15,7 +15,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const clubs = ['SKKUDING', 'SKKU.D']
   const reservation = ref<State>({
     creator: '',
-    club: clubs[0],
+    club: 'SKKUDING',
     memberCnt: '',
     startTime: '',
     endTime: '',
@@ -25,7 +25,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const reset = () => {
     reservation.value = {
       creator: '',
-      club: clubs[0],
+      club: 'SKKUDING',
       memberCnt: '',
       startTime: '',
       endTime: '',
@@ -33,7 +33,7 @@ export const useReservationStore = defineStore('reservation', () => {
       members: []
     }
   }
-  const validate = (key: keyof State) => {
+  const validate = (key: keyof State, index = 0) => {
     if (key === 'creator') {
       if (reservation.value.creator === '') {
         return '예약자 이름을 입력해주세요'
@@ -45,8 +45,11 @@ export const useReservationStore = defineStore('reservation', () => {
         return '예약 인원을 입력해주세요'
       } else if (Number.isNaN(Number(reservation.value.memberCnt))) {
         return '숫자만 입력해주세요'
-      } else if (Number(reservation.value.memberCnt) > 8) {
-        return '8 이하의 숫자만 입력해주세요'
+      } else if (
+        Number(reservation.value.memberCnt) > 8 ||
+        Number(reservation.value.memberCnt) <= 0
+      ) {
+        return '1 이상 8 이하의 숫자만 입력해주세요'
       } else {
         return ''
       }
@@ -57,22 +60,15 @@ export const useReservationStore = defineStore('reservation', () => {
         return ''
       }
     } else if (key === 'members') {
-      const messages = reservation.value.members.map((member) =>
-        member === '' ? '참가자 이름을 입력해주세요' : ''
-      )
-      return messages
+      if (reservation.value.members[index] === '') {
+        return '참가자 이름을 입력해주세요'
+      } else {
+        return ''
+      }
     } else {
       return ''
     }
   }
-  watch(
-    () => reservation.value.memberCnt,
-    (value) => {
-      if (!Number.isNaN(Number(value))) {
-        reservation.value.members = Array(Number(value)).fill('')
-      }
-    }
-  )
 
   return { reservation, clubs, reset, validate }
 })
