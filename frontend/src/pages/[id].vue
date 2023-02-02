@@ -35,7 +35,6 @@ var date = new Date() // test
 
 <style scoped>
 #detail-page-wrapper {
-  border: 10px solid pink;
   display: flex;
   flex-direction: column;
   justify-content: center;
