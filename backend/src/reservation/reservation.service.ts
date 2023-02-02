@@ -17,6 +17,11 @@ export class ReservationService {
     reservationDTO: GetAllReservationDTO
   ): Promise<RespondGetAllReservationRequestDTO[]> {
     const { startTime, endTime } = reservationDTO
+    const start = new Date(startTime)
+    const end = new Date(endTime)
+    if (start >= end) {
+      throw new BadRequestException()
+    }
     const result = await this.prismaService.reservation.findMany({
       where: {
         OR: [
@@ -129,8 +134,11 @@ export class ReservationService {
       createReservationParams
 
     // check startTime and endTime (30분 단위)
-    const startTimeDate = new Date(startTime)
-    const endTimeDate = new Date(endTime)
+    // add 9 hours to support korean timezone
+    const startTimeDate = new Date(
+      new Date(startTime).getTime() + 9 * 3600 * 1000
+    )
+    const endTimeDate = new Date(new Date(endTime).getTime() + 9 * 3600 * 1000)
 
     if (
       (startTimeDate.getMinutes() !== 30 && startTimeDate.getMinutes() !== 0) ||
@@ -224,6 +232,11 @@ export class ReservationService {
     reservationDTO: GetSpecificReservationRequestDTO
   ): Promise<GetSpecificReservationResponseDTO> {
     const { startTime, endTime } = reservationDTO
+    const start = new Date(startTime)
+    const end = new Date(endTime)
+    if (start >= end) {
+      throw new BadRequestException()
+    }
     const rawData = await this.prismaService.reservation.findMany({
       where: {
         OR: [
@@ -292,8 +305,11 @@ export class ReservationService {
       updateReservationParams
 
     //check startTime and endTime
-    const startTimeDate = new Date(startTime)
-    const endTimeDate = new Date(endTime)
+    // add 9 hours to support korean timezone
+    const startTimeDate = new Date(
+      new Date(startTime).getTime() + 9 * 3600 * 1000
+    )
+    const endTimeDate = new Date(new Date(endTime).getTime() + 9 * 3600 * 1000)
     const maxMember = 8
 
     if (
