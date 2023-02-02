@@ -32,12 +32,7 @@ defineEmits<{
           >
             취소
           </Button>
-          <Button
-            color="green"
-            @click="$emit('confirm'), $emit('update:modelValue', false)"
-          >
-            확인
-          </Button>
+          <Button color="green" @click="$emit('confirm')">확인</Button>
         </div>
       </div>
     </OnClickOutside>
@@ -56,6 +51,7 @@ defineEmits<{
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 200;
 }
 .modal-container {
   background-color: white;
@@ -69,7 +65,6 @@ defineEmits<{
   align-items: center;
   width: 428px;
   min-height: 16rem;
-  z-index: 50;
 }
 .title {
   font-weight: bold;
