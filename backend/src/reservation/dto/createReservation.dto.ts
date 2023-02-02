@@ -1,4 +1,10 @@
-import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator'
+import {
+  IsArray,
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsString
+} from 'class-validator'
 import { Club } from '@prisma/client'
 
 export class CreateReservationRequestDto {
@@ -8,10 +14,10 @@ export class CreateReservationRequestDto {
   @IsEnum(Club)
   club: Club
 
-  @IsString()
+  @IsDateString()
   startTime: string
 
-  @IsString()
+  @IsDateString()
   endTime: string
 
   @IsOptional()
