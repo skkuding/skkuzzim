@@ -112,8 +112,8 @@ const onCancel = () => {
   }
 }
 const onConfirm = () => {
-  inputMessage.value.creator = store.validate('creator') as string
-  inputMessage.value.memberCnt = store.validate('memberCnt') as string
+  inputMessage.value.creator = store.validate('creator')
+  inputMessage.value.memberCnt = store.validate('memberCnt')
   if (
     inputMessage.value.creator === '' &&
     inputMessage.value.memberCnt === ''
