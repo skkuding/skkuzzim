@@ -8,11 +8,12 @@ import Modal from '@/components/Modal.vue'
 import IconChevronLeft from '~icons/fa6-solid/chevron-left'
 import IconChevronRight from '~icons/fa6-solid/chevron-right'
 import IconPlus from '~icons/fa6-solid/plus'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
+import axios from 'axios'
 
 const route = useRoute()
 const router = useRouter()
@@ -68,41 +69,32 @@ watch(dayTime, (value) => {
 })
 
 // api request
-const startTime = computed(() =>
-  useDateFormat(dates.value.monday, 'YYYY-MM-DD HH:mm:ss.000')
-    .value.replace(' ', 'T')
-    .concat('Z')
-)
-const endTime = computed(() =>
-  useDateFormat(dates.value.sunday, 'YYYY-MM-DD HH:mm:ss.000')
-    .value.replace(' ', 'T')
-    .concat('Z')
-)
-
-// response example (test, 머지하기 전 지울 것)
-const data = [
-  {
-    startTime: '2023-01-26T16:00:00.000Z',
-    endTime: '',
-    skkuding: 2,
-    skkud: 5,
-    isFull: false
-  },
-  {
-    startTime: '2023-01-26T10:00:00.000Z',
-    endTime: '',
-    skkuding: 3,
-    skkud: 5,
-    isFull: true
-  },
-  {
-    startTime: '2023-01-26T09:00:00.000Z',
-    endTime: '',
-    skkuding: 1,
-    skkud: 0,
-    isFull: false
-  }
-]
+type Response = {
+  startTime: string
+  endTime: string
+  skkuding: number
+  skkud: number
+  isFull: boolean
+}[]
+const data = ref<Response>([])
+watchEffect(async () => {
+  const startTime = computed(() =>
+    useDateFormat(dates.value.monday, 'YYYY-MM-DD HH:mm:ss').value.replace(
+      ' ',
+      'T'
+    )
+  )
+  const endTime = computed(() =>
+    useDateFormat(dates.value.sunday, 'YYYY-MM-DD HH:mm:ss').value.replace(
+      ' ',
+      'T'
+    )
+  )
+  const response = await axios.get(
+    `/api/reservation?startTime=${startTime.value}&endTime=${endTime.value}`
+  )
+  data.value = response.data
+})
 
 // modal form
 const showModal = ref(false)
@@ -153,10 +145,18 @@ const onConfirm = () => {
         :key="index"
         v-slot:[startTime]
       >
-        <RouterLink :to="`/${startTime}`" class="block-wrapper" v-if="isFull">
+        <RouterLink
+          :to="`/${startTime.split('.')[0]}`"
+          class="block-wrapper"
+          v-if="isFull"
+        >
           <TimeBlock :member="8" />
         </RouterLink>
-        <RouterLink :to="`/${startTime}`" class="block-wrapper" v-else>
+        <RouterLink
+          :to="`/${startTime.split('.')[0]}`"
+          class="block-wrapper"
+          v-else
+        >
           <TimeBlock :member="skkuding" club="skkuding" v-if="skkuding !== 0" />
           <TimeBlock :member="skkud" club="skkud" v-if="skkud !== 0" />
         </RouterLink>
