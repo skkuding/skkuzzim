@@ -57,12 +57,12 @@ export const useReservationTable = (options: { routing: boolean }) => {
           ? router.replace(`/?week=${week.value + 1}`).then(() => {
               week.value += 1
             })
-          : (week.value -= 1)
+          : (week.value += 1)
         break
     }
   }
 
-  // reservation data
+  // reservation table data
   const data = ref<Response>([])
   watchEffect(async () => {
     const startTime = ref(
