@@ -111,6 +111,12 @@ const isNow = (start: string) => {
         </th>
         <td v-for="({ date }, index) in week" :key="index">
           <slot :name="`${date}T${start}:00.000Z`" />
+          <slot
+            v-if="!$slots[`${date}T${start}:00.000Z`]"
+            name="timeSelection"
+            :start-time="`${date}T${start}:00.000Z`"
+            :end-time="`${date}T${end}:00.000Z`"
+          />
         </td>
       </tr>
     </tbody>

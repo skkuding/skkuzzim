@@ -1,12 +1,326 @@
 <script setup lang="ts">
-import MyComponent from '@/components/MyComponent.vue'
-import { useCounterStore } from '@/stores/counter'
-const counter = useCounterStore()
+import Table from '@/components/Table.vue'
+import Button from '@/components/Button.vue'
+import Modal from '@/components/Modal.vue'
+import TextInput from '@/components/TextInput.vue'
+import IconChevronLeft from '~icons/fa6-solid/chevron-left'
+import IconChevronRight from '~icons/fa6-solid/chevron-right'
+import IconPlus from '~icons/fa6-solid/plus'
+import { COLOR } from '@/styles/theme'
+import { computed, onBeforeMount, ref, watch, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
+import { useDateFormat } from '@vueuse/core'
+import { useReservationStore } from '@/stores/reservation'
+import { storeToRefs } from 'pinia'
+import axios from 'axios'
+
+const router = useRouter()
+const week = ref(0)
+const dates = computed(() => {
+  const monday = new Date()
+  const day = monday.getDay() || 7
+  monday.setDate(monday.getDate() - (day - 1) + 7 * week.value)
+  monday.setHours(9)
+  monday.setMinutes(0)
+  monday.setSeconds(0)
+  monday.setMilliseconds(0)
+  const sunday = new Date(monday)
+  sunday.setDate(sunday.getDate() + 6)
+  sunday.setHours(24)
+  return {
+    monday,
+    sunday
+  }
+})
+
+// button click event handlers
+const weekHandler = (action: 'lastWeek' | 'today' | 'nextWeek') => {
+  switch (action) {
+    case 'lastWeek':
+      week.value -= 1
+      break
+    case 'today':
+      week.value = 0
+      break
+    case 'nextWeek':
+      week.value += 1
+      break
+  }
+}
+
+// header
+const emit = defineEmits<{
+  (e: 'dayTime', value: string): void
+}>()
+const dayTime = computed(
+  () => useDateFormat(dates.value.monday, 'YYYY년 M월').value
+)
+emit('dayTime', dayTime.value)
+watch(dayTime, (value) => {
+  emit('dayTime', value)
+})
+
+// api request
+type Response = {
+  startTime: string
+  endTime: string
+  skkuding: number
+  skkud: number
+  isFull: boolean
+}[]
+const data = ref<Response>([])
+watchEffect(async () => {
+  const startTime = computed(() =>
+    useDateFormat(dates.value.monday, 'YYYY-MM-DD HH:mm:ss').value.replace(
+      ' ',
+      'T'
+    )
+  )
+  const endTime = computed(() =>
+    useDateFormat(dates.value.sunday, 'YYYY-MM-DD HH:mm:ss').value.replace(
+      ' ',
+      'T'
+    )
+  )
+  const response = await axios.get(
+    `/api/reservation?startTime=${startTime.value}&endTime=${endTime.value}`
+  )
+  data.value = response.data
+})
+
+// select time
+const store = useReservationStore()
+const { reservation } = storeToRefs(store)
+const canSelect = (total: number) => {
+  return total + Number(reservation.value.memberCnt) <= 8
+}
+const isSelected = (startTime: string, endTime: string) => {
+  if (
+    new Date(startTime).getTime() >=
+      new Date(reservation.value.startTime).getTime() &&
+    new Date(endTime).getTime() <= new Date(reservation.value.endTime).getTime()
+  ) {
+    return true
+  }
+  return false
+}
+const selectTime = (startTime: string, endTime: string) => {
+  if (reservation.value.startTime === '') {
+    reservation.value.startTime = startTime
+    reservation.value.endTime = endTime
+  } else {
+    // validation
+    for (let i = 0; i < data.value.length; i++) {
+      const {
+        startTime: time1,
+        endTime: time2,
+        skkud,
+        skkuding
+      } = data.value[i]
+      if (
+        new Date(time1).getTime() >=
+          new Date(reservation.value.startTime).getTime() &&
+        new Date(time2).getTime() <= new Date(endTime).getTime() &&
+        !canSelect(skkud + skkuding)
+      ) {
+        return
+      }
+    }
+    if (
+      new Date(reservation.value.startTime).getTime() >
+      new Date(startTime).getTime()
+    ) {
+      reservation.value.startTime = startTime
+    } else {
+      reservation.value.endTime = endTime
+    }
+  }
+  console.log(reservation.value.startTime, reservation.value.endTime) // test
+}
+
+// modal form
+const showModal = ref(false)
+const inputMessage = ref({
+  purpose: '',
+  members: ['']
+})
+onBeforeMount(() => {
+  if (reservation.value.memberCnt === '') {
+    router.push('/')
+  } else {
+    reservation.value.members = store.initializeMembers()
+    inputMessage.value.members = store.initializeMembers()
+  }
+})
+const onClickCreateButton = () => {
+  if (Number(reservation.value.memberCnt) === 1) {
+    // post 요청
+  } else {
+    showModal.value = true
+  }
+}
+const onCancel = () => {
+  reservation.value.purpose = ''
+  reservation.value.members = store.initializeMembers()
+  inputMessage.value = {
+    purpose: '',
+    members: store.initializeMembers()
+  }
+}
+const onConfirm = () => {
+  inputMessage.value.purpose = store.validate('purpose')
+  inputMessage.value.members = reservation.value.members.map((_, index) =>
+    store.validate('members', index)
+  )
+  const pass = inputMessage.value.members.reduce(
+    (pass, current) => pass && !current,
+    true
+  )
+  if (inputMessage.value.purpose === '' && pass) {
+    // post 요청
+  }
+}
 </script>
 
 <template>
-  <div>시간 선택 페이지입니다!</div>
-  <div>count = {{ counter.count }}</div>
-  <button @click="counter.increment">Click</button>
-  <MyComponent />
+  <div class="select-wrapper" v-if="reservation.memberCnt !== ''">
+    <div class="button-wrapper">
+      <Button color="white" @click="weekHandler('lastWeek')">
+        <IconChevronLeft width="10" height="16" />
+        지난주
+      </Button>
+      <div>
+        <Button color="gray" @click="weekHandler('today')">오늘</Button>
+        <Button color="white" @click="weekHandler('nextWeek')">
+          다음주
+          <IconChevronRight width="10" height="16" />
+        </Button>
+      </div>
+    </div>
+    <Table :monday="dates.monday">
+      <template
+        v-for="({ startTime, endTime, skkud, skkuding }, index) in data"
+        :key="index"
+        v-slot:[startTime]
+      >
+        <div
+          v-if="canSelect(skkud + skkuding)"
+          :class="isSelected(startTime, endTime) ? 'cell selected' : 'cell'"
+          @click="selectTime(startTime, endTime)"
+        />
+        <div v-else class="cell disabled" />
+      </template>
+      <template v-slot:timeSelection="{ startTime, endTime }">
+        <div
+          :class="isSelected(startTime, endTime) ? 'cell selected' : 'cell'"
+          @click="selectTime(startTime, endTime)"
+        />
+      </template>
+    </Table>
+    <div class="button-modal-wrapper">
+      <Button color="red" @click="router.go(-1)">뒤로 가기</Button>
+      <Button color="green" class="create-button" @click="onClickCreateButton">
+        <IconPlus />
+        생성
+      </Button>
+    </div>
+    <Modal
+      v-model="showModal"
+      title="예약 상세 정보 입력"
+      @cancel="onCancel"
+      @confirm="onConfirm"
+    >
+      <form>
+        <label>
+          <span>모임이름</span>
+          <TextInput
+            placeholder="예시: SKKUDING 개발 회의"
+            v-model="reservation.purpose"
+            :message="inputMessage.purpose"
+          />
+        </label>
+        <label>
+          <span>
+            참가자 이름
+            <br />
+            ({{ reservation.memberCnt }})
+          </span>
+          <div class="input-box">
+            <p>{{ reservation.creator }}</p>
+            <TextInput
+              v-for="(_, index) in reservation.members"
+              :key="index"
+              v-model="reservation.members[index]"
+              :message="inputMessage.members[index]"
+            />
+          </div>
+        </label>
+      </form>
+    </Modal>
+  </div>
 </template>
+
+<style scoped>
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 3rem 0 5rem;
+}
+.button-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.button-wrapper > div {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.button-wrapper button {
+  height: 36px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  min-width: 78px;
+}
+.cell {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.cell.disabled {
+  background-color: v-bind('COLOR["light-gray"]');
+  cursor: auto;
+}
+.cell.selected {
+  background-color: v-bind('COLOR.green');
+}
+.button-modal-wrapper {
+  display: flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: 1rem;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+label {
+  display: flex;
+  gap: 2rem;
+}
+label > .input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+label > span {
+  flex-basis: 77px;
+  text-align: center;
+}
+</style>
