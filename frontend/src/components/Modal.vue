@@ -68,7 +68,7 @@ defineEmits<{
   margin-top: 0.5rem;
   align-items: center;
   width: 428px;
-  min-height: 16rem;
+  min-height: 10rem;
   z-index: 50;
 }
 .title {
