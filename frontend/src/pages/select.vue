@@ -13,6 +13,7 @@ import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
 import { useReservationTable } from '@/hooks/useReservationTable'
+import axios from 'axios'
 
 const router = useRouter()
 const { monday, data, weekHandler } = useReservationTable({ routing: false })
@@ -35,9 +36,8 @@ const canSelect = (total: number) => {
 }
 const isSelected = (startTime: string, endTime: string) => {
   if (
-    new Date(startTime).getTime() >=
-      new Date(reservation.value.startTime).getTime() &&
-    new Date(endTime).getTime() <= new Date(reservation.value.endTime).getTime()
+    Date.parse(startTime) >= Date.parse(reservation.value.startTime) &&
+    Date.parse(endTime) <= Date.parse(reservation.value.endTime)
   ) {
     return true
   }
@@ -57,24 +57,53 @@ const selectTime = (startTime: string, endTime: string) => {
         skkuding
       } = data.value[i]
       if (
-        new Date(time1).getTime() >=
-          new Date(reservation.value.startTime).getTime() &&
-        new Date(time2).getTime() <= new Date(endTime).getTime() &&
+        Date.parse(time1) >= Date.parse(reservation.value.startTime) &&
+        Date.parse(time2) <= Date.parse(endTime) &&
         !canSelect(skkud + skkuding)
       ) {
         return
       }
     }
-    if (
-      new Date(reservation.value.startTime).getTime() >
-      new Date(startTime).getTime()
-    ) {
+    if (Date.parse(reservation.value.startTime) > Date.parse(startTime)) {
       reservation.value.startTime = startTime
     } else {
       reservation.value.endTime = endTime
     }
   }
   console.log(reservation.value.startTime, reservation.value.endTime) // test
+}
+
+// post api
+interface Request {
+  creator: string
+  startTime: string
+  endTime: string
+  purpose?: string
+  members: string[]
+  club: 'skkuding' | 'skkud'
+}
+interface Response extends Request {
+  id: number
+}
+const postLoading = ref(false)
+const postReservation = async () => {
+  postLoading.value = true
+  try {
+    reservation.value.members.push(reservation.value.creator)
+    const payload: Request = {
+      ...reservation.value,
+      startTime: reservation.value.startTime.replace('Z', ''),
+      endTime: reservation.value.endTime.replace('Z', ''),
+      club: reservation.value.club === 'SKKUDING' ? 'skkuding' : 'skkud'
+    }
+    const { data } = await axios.post<Response>('/api/reservation', payload)
+    postLoading.value = false
+    store.reset()
+    router.push('/') // 메인 페이지로 이동 or 상세 페이지로 이동??
+    // router.push(`/${data.startTime.split('.')[0]}`)
+  } catch (e) {
+    // 에러 발생했을 때 어떤 로직 수행??
+  }
 }
 
 // modal form
@@ -91,9 +120,9 @@ onBeforeMount(() => {
     inputMessage.value.members = store.initializeMembers()
   }
 })
-const onClickCreateButton = () => {
+const onClickCreateButton = async () => {
   if (Number(reservation.value.memberCnt) === 1) {
-    // post 요청
+    await postReservation()
   } else {
     showModal.value = true
   }
@@ -106,7 +135,7 @@ const onCancel = () => {
     members: store.initializeMembers()
   }
 }
-const onConfirm = () => {
+const onConfirm = async () => {
   inputMessage.value.purpose = store.validate('purpose')
   inputMessage.value.members = reservation.value.members.map((_, index) =>
     store.validate('members', index)
@@ -116,7 +145,8 @@ const onConfirm = () => {
     true
   )
   if (inputMessage.value.purpose === '' && pass) {
-    //모달 닫기 및 post 요청
+    showModal.value = false
+    await postReservation()
   }
 }
 </script>
