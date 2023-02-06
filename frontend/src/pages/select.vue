@@ -106,7 +106,6 @@ const postReservation = async () => {
     await router.push(`/${data.startTime.split('.')[0]}`)
     showToastMessage('예약이 완료되었습니다!')
   } catch (e) {
-    // 에러 발생했을 때 어떤 로직 수행??
     console.log(e)
   }
 }
