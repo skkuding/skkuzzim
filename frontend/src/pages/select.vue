@@ -85,7 +85,7 @@ interface Request {
   creator: string
   startTime: string
   endTime: string
-  purpose?: string
+  purpose: string
   members: string[]
   club: 'skkuding' | 'skkud'
 }
