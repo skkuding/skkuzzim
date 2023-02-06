@@ -153,6 +153,10 @@ const onConfirm = async () => {
     await postReservation()
   }
 }
+const onClickResetButton = () => {
+  reservation.value.startTime = ''
+  reservation.value.endTime = ''
+}
 </script>
 
 <template>
@@ -192,6 +196,7 @@ const onConfirm = async () => {
     </Table>
     <div class="button-modal-wrapper">
       <Button color="red" @click="router.go(-1)">뒤로 가기</Button>
+      <Button color="gray" @click="onClickResetButton">초기화</Button>
       <Button color="green" class="create-button" @click="onClickCreateButton">
         <IconPlus />
         생성
