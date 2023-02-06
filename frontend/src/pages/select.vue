@@ -13,7 +13,7 @@ import { COLOR } from '@/styles/theme'
 import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
-import { useReservationTable } from '@/hooks/useReservationTable'
+import { useReservationTable } from '@/composables/useReservationTable'
 import { useToastMessage } from '@/stores/toastMessage'
 
 const router = useRouter()

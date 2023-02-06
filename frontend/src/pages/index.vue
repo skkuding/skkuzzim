@@ -13,7 +13,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
-import { useReservationTable } from '@/hooks/useReservationTable'
+import { useReservationTable } from '@/composables/useReservationTable'
 
 const router = useRouter()
 const { monday, data, weekHandler } = useReservationTable({ routing: true })
