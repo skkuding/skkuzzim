@@ -124,6 +124,13 @@ onBeforeMount(() => {
     inputMessage.value.members = store.initializeMembers()
   }
 })
+const onClickCreateButton = async () => {
+  if (Number(reservation.value.memberCnt) === 1) {
+    await postReservation()
+  } else {
+    showModal.value = true
+  }
+}
 const onCancel = () => {
   reservation.value.purpose = ''
   reservation.value.members = store.initializeMembers()
@@ -144,20 +151,6 @@ const onConfirm = async () => {
   if (inputMessage.value.purpose === '' && pass) {
     showModal.value = false
     await postReservation()
-  }
-}
-
-// button click handler
-const onClickBackButton = () => {
-  reservation.value.startTime = ''
-  reservation.value.endTime = ''
-  router.go(-1)
-}
-const onClickCreateButton = async () => {
-  if (Number(reservation.value.memberCnt) === 1) {
-    await postReservation()
-  } else {
-    showModal.value = true
   }
 }
 </script>
@@ -198,7 +191,7 @@ const onClickCreateButton = async () => {
       </template>
     </Table>
     <div class="button-modal-wrapper">
-      <Button color="red" @click="onClickBackButton">뒤로 가기</Button>
+      <Button color="red" @click="router.go(-1)">뒤로 가기</Button>
       <Button color="green" class="create-button" @click="onClickCreateButton">
         <IconPlus />
         생성
