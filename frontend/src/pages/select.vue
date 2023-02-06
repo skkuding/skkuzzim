@@ -6,14 +6,15 @@ import TextInput from '@/components/TextInput.vue'
 import IconChevronLeft from '~icons/fa6-solid/chevron-left'
 import IconChevronRight from '~icons/fa6-solid/chevron-right'
 import IconPlus from '~icons/fa6-solid/plus'
-import { COLOR } from '@/styles/theme'
+import axios from 'axios'
 import { computed, onBeforeMount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { COLOR } from '@/styles/theme'
 import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
 import { useReservationTable } from '@/hooks/useReservationTable'
-import axios from 'axios'
+import { useToastMessage } from '@/stores/toastMessage'
 
 const router = useRouter()
 const { monday, data, weekHandler } = useReservationTable({ routing: false })
@@ -49,6 +50,10 @@ const selectTime = (startTime: string, endTime: string) => {
     reservation.value.endTime = endTime
   } else {
     // validation
+    const [start, end] =
+      Date.parse(reservation.value.startTime) > Date.parse(startTime)
+        ? [startTime, reservation.value.endTime]
+        : [reservation.value.startTime, endTime]
     for (let i = 0; i < data.value.length; i++) {
       const {
         startTime: time1,
@@ -57,8 +62,8 @@ const selectTime = (startTime: string, endTime: string) => {
         skkuding
       } = data.value[i]
       if (
-        Date.parse(time1) >= Date.parse(reservation.value.startTime) &&
-        Date.parse(time2) <= Date.parse(endTime) &&
+        Date.parse(time1) >= Date.parse(start) &&
+        Date.parse(time2) <= Date.parse(end) &&
         !canSelect(skkud + skkuding)
       ) {
         return
@@ -73,6 +78,8 @@ const selectTime = (startTime: string, endTime: string) => {
   console.log(reservation.value.startTime, reservation.value.endTime) // test
 }
 
+// toast message
+const { showToastMessage } = useToastMessage()
 // post api
 interface Request {
   creator: string
@@ -85,9 +92,7 @@ interface Request {
 interface Response extends Request {
   id: number
 }
-const postLoading = ref(false)
 const postReservation = async () => {
-  postLoading.value = true
   try {
     reservation.value.members.push(reservation.value.creator)
     const payload: Request = {
@@ -97,12 +102,12 @@ const postReservation = async () => {
       club: reservation.value.club === 'SKKUDING' ? 'skkuding' : 'skkud'
     }
     const { data } = await axios.post<Response>('/api/reservation', payload)
-    postLoading.value = false
     store.reset()
-    router.push('/') // 메인 페이지로 이동 or 상세 페이지로 이동??
-    // router.push(`/${data.startTime.split('.')[0]}`)
+    await router.push(`/${data.startTime.split('.')[0]}`)
+    showToastMessage('예약이 완료되었습니다!')
   } catch (e) {
     // 에러 발생했을 때 어떤 로직 수행??
+    console.log(e)
   }
 }
 
@@ -120,13 +125,6 @@ onBeforeMount(() => {
     inputMessage.value.members = store.initializeMembers()
   }
 })
-const onClickCreateButton = async () => {
-  if (Number(reservation.value.memberCnt) === 1) {
-    await postReservation()
-  } else {
-    showModal.value = true
-  }
-}
 const onCancel = () => {
   reservation.value.purpose = ''
   reservation.value.members = store.initializeMembers()
@@ -147,6 +145,20 @@ const onConfirm = async () => {
   if (inputMessage.value.purpose === '' && pass) {
     showModal.value = false
     await postReservation()
+  }
+}
+
+// button click handler
+const onClickBackButton = () => {
+  reservation.value.startTime = ''
+  reservation.value.endTime = ''
+  router.go(-1)
+}
+const onClickCreateButton = async () => {
+  if (Number(reservation.value.memberCnt) === 1) {
+    await postReservation()
+  } else {
+    showModal.value = true
   }
 }
 </script>
@@ -187,7 +199,7 @@ const onConfirm = async () => {
       </template>
     </Table>
     <div class="button-modal-wrapper">
-      <Button color="red" @click="router.go(-1)">뒤로 가기</Button>
+      <Button color="red" @click="onClickBackButton">뒤로 가기</Button>
       <Button color="green" class="create-button" @click="onClickCreateButton">
         <IconPlus />
         생성
@@ -272,6 +284,11 @@ const onConfirm = async () => {
   align-items: center;
   align-self: flex-end;
   gap: 1rem;
+}
+.create-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 form {
   display: flex;
