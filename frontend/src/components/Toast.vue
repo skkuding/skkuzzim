@@ -31,7 +31,7 @@ defineProps<{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 100;
+  z-index: 300;
 }
 .toast-message {
   color: v-bind("TEXT_COLOR['white']");

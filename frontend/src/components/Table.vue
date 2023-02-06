@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useDateFormat, useNow } from '@vueuse/core'
 import { COLOR, FONT_SIZE } from '@/styles/theme'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps<{
   monday: Date
@@ -15,6 +15,12 @@ type Day = {
 
 const now = useNow()
 const isThisWeek = ref(false)
+watch(
+  () => props.monday,
+  () => {
+    isThisWeek.value = false
+  }
+)
 
 // 헤더: 일주일 동안의 요일과 날짜, css 스타일 정보
 const week = computed(() => {
