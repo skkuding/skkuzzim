@@ -32,28 +32,32 @@ watch(dayTime, (value) => {
 // select time
 const store = useReservationStore()
 const { reservation } = storeToRefs(store)
+const selectedTime = ref({
+  startTime: '',
+  endTime: ''
+})
 const canSelect = (total: number) => {
   return total + Number(reservation.value.memberCnt) <= 8
 }
 const isSelected = (startTime: string, endTime: string) => {
   if (
-    Date.parse(startTime) >= Date.parse(reservation.value.startTime) &&
-    Date.parse(endTime) <= Date.parse(reservation.value.endTime)
+    Date.parse(startTime) >= Date.parse(selectedTime.value.startTime) &&
+    Date.parse(endTime) <= Date.parse(selectedTime.value.endTime)
   ) {
     return true
   }
   return false
 }
 const selectTime = (startTime: string, endTime: string) => {
-  if (reservation.value.startTime === '') {
-    reservation.value.startTime = startTime
-    reservation.value.endTime = endTime
+  if (selectedTime.value.startTime === '') {
+    selectedTime.value.startTime = startTime
+    selectedTime.value.endTime = endTime
   } else {
     // validation
     const [start, end] =
-      Date.parse(reservation.value.startTime) > Date.parse(startTime)
-        ? [startTime, reservation.value.endTime]
-        : [reservation.value.startTime, endTime]
+      Date.parse(selectedTime.value.startTime) > Date.parse(startTime)
+        ? [startTime, selectedTime.value.endTime]
+        : [selectedTime.value.startTime, endTime]
     for (let i = 0; i < data.value.length; i++) {
       const {
         startTime: time1,
@@ -69,13 +73,13 @@ const selectTime = (startTime: string, endTime: string) => {
         return
       }
     }
-    if (Date.parse(reservation.value.startTime) > Date.parse(startTime)) {
-      reservation.value.startTime = startTime
+    if (Date.parse(selectedTime.value.startTime) > Date.parse(startTime)) {
+      selectedTime.value.startTime = startTime
     } else {
-      reservation.value.endTime = endTime
+      selectedTime.value.endTime = endTime
     }
   }
-  console.log(reservation.value.startTime, reservation.value.endTime) // test
+  console.log(selectedTime.value.startTime, selectedTime.value.endTime) // test
 }
 
 // toast message
@@ -97,8 +101,6 @@ const postReservation = async () => {
     reservation.value.members.push(reservation.value.creator)
     const payload: Request = {
       ...reservation.value,
-      startTime: reservation.value.startTime.replace('Z', ''),
-      endTime: reservation.value.endTime.replace('Z', ''),
       club: reservation.value.club === 'SKKUDING' ? 'skkuding' : 'skkud'
     }
     const { data } = await axios.post<Response>('/api/reservation', payload)
@@ -125,11 +127,15 @@ onBeforeMount(() => {
   }
 })
 const onClickCreateButton = async () => {
+  reservation.value.startTime = selectedTime.value.startTime.replace('Z', '')
+  reservation.value.endTime = selectedTime.value.endTime.replace('Z', '')
+  // 생성일 때
   if (Number(reservation.value.memberCnt) === 1) {
     await postReservation()
   } else {
     showModal.value = true
   }
+  // 수정일 때는 로직이 바뀌어야 함!!
 }
 const onCancel = () => {
   reservation.value.purpose = ''
@@ -154,8 +160,8 @@ const onConfirm = async () => {
   }
 }
 const onClickResetButton = () => {
-  reservation.value.startTime = ''
-  reservation.value.endTime = ''
+  selectedTime.value.startTime = ''
+  selectedTime.value.endTime = ''
 }
 </script>
 
