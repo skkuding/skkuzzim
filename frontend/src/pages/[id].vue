@@ -54,13 +54,12 @@ let dayTime = computed(() => useDateFormat(props.id, 'M월 D일 HH:mm').value)
 
 let test = dayjs(props.id).add(30, 'minute').utc().format()
 let apiRequest = dayjs(props.id).add(570, 'minute').utc().format()
-// test.setMinutes(test.getMinutes() + 30)
+
 onMounted(() => {
   axios
     .get(`/api/reservation/detail?startTime=${props.id}&endTime=${apiRequest}`)
     .then((res) => {
       data.value = res.data.data
-      console.log('data is ', data)
       for (let i = 0; i < data.value.length; i++) {
         data.value[i].startTime = data.value[i].startTime.replace('Z', '')
         data.value[i].endTime = data.value[i].endTime.replace('Z', '')
@@ -88,9 +87,7 @@ const removeModal = ref(false)
 const editToast = ref(false)
 const deleteToast = ref(false)
 
-const showEditModal = (e) => {
-  console.log('data ', data.value[e])
-
+const showEditModal = (e: number) => {
   editInfo.value = {
     ...data.value[e],
     members: [...data.value[e].members]
@@ -113,7 +110,7 @@ const showRemoveModal = () => {
   removeModal.value = true
 }
 
-const editApproval = (e) => {
+const editApproval = (e: number) => {
   inputMessage.value.purpose = store.validateEdit('purpose')
   for (let i = 0; i < editInfo.value.members.length; i++) {
     inputMessage.value.members[i] = store.validateEdit('members', i)
@@ -141,7 +138,7 @@ const cancelEdit = () => {
   }
 }
 
-const removeApproval = (e) => {
+const removeApproval = (e: number) => {
   axios
     .delete(`/api/reservation/${e}`)
     .then((res) => console.log(res))
@@ -157,8 +154,7 @@ const editAddHandler = (e) => {
   e.preventDefault()
   editInfo.value.members.push('')
 }
-const deleteHandler = (e) => {
-  console.log(e + 1)
+const deleteHandler = (e: number) => {
   editInfo.value.members.splice(e + 1, 1)
 }
 
@@ -192,7 +188,7 @@ type Item = {
           members
         }"
         v-on:edit="showEditModal(index)"
-        v-on:remove="showRemoveModal(index)"
+        v-on:remove="showRemoveModal"
         class="list-item"
       ></ListItem>
     </div>
