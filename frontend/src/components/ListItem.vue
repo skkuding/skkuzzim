@@ -4,13 +4,14 @@ import { computed } from 'vue'
 import { COLOR } from '@/styles/theme'
 import Button from './Button.vue'
 import IconCircle from '~icons/fa6-solid/circle'
+import dayjs from 'dayjs'
 
 type Item = {
   id: number
   creator: string
   club: 'skkuding' | 'skkud'
-  startTime: Date
-  endTime: Date
+  startTime: string
+  endTime: string
   members: string[]
   purpose?: string
 }
@@ -26,9 +27,9 @@ defineEmits<{
 
 const period = computed(() => {
   return (
-    useDateFormat(props.item.startTime, 'HH:mm').value +
+    dayjs(props.item.startTime).format('HH:mm') +
     '~' +
-    useDateFormat(props.item.endTime, 'HH:mm').value
+    dayjs(props.item.endTime).format('HH:mm')
   )
 })
 </script>

@@ -17,7 +17,9 @@ defineEmits<{
 
 <template>
   <div v-if="modelValue" class="modal-wrapper">
-    <OnClickOutside @trigger="$emit('update:modelValue', false)">
+    <OnClickOutside
+      @trigger="$emit('cancel'), $emit('update:modelValue', false)"
+    >
       <div class="modal-container">
         <h1 class="title">
           {{ title }}

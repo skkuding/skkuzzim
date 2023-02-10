@@ -28,8 +28,8 @@ defineProps<{
   color: v-bind("TEXT_COLOR['white']");
   align-items: center;
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 13%;
+  left: 92%;
   transform: translate(-50%, -50%);
   z-index: 300;
 }

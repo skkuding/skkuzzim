@@ -5,87 +5,266 @@ import Modal from '@/components/Modal.vue'
 // import MyComponent from '@/components/MyComponent.vue'
 import { FONT_SIZE, COLOR } from '@/styles/theme'
 import IconClock from '~icons/fa6-regular/clock'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, type Ref } from 'vue'
 import { useDateFormat } from '@vueuse/core'
+import Toast from '@/components/Toast.vue'
+import { useEditStore } from '@/stores/reservation'
+import { storeToRefs } from 'pinia'
+import MemberTextInput from '@/components/MemberTextInput.vue'
+import TextInput from '@/components/TextInput.vue'
+import RadioGroup from '@/components/RadioGroup.vue'
+import IconPlus from '~icons/fa6-solid/plus'
+import dayjs from 'dayjs'
+import 'dayjs/locale/ko'
+import axios from 'axios'
+import { useModalStore } from '@/stores/modal'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc)
+dayjs.locale('ko')
 
 const props = defineProps<{
   id: string
 }>()
 
+let data = ref<Item[]>([
+  {
+    id: 0,
+    creator: '김예시',
+    purpose: 'SKKUDING 개발 회의',
+    club: 'skkuding',
+    startTime: '',
+    endTime: '',
+    members: ['김예시', '홍길동', '김철수']
+  },
+  {
+    id: 1,
+    creator: '강금비',
+    purpose: '토이 프로젝트',
+    startTime: '',
+    endTime: '',
+    club: 'skkud',
+    members: ['강금비', '조무지']
+  }
+])
 // header
 const emit = defineEmits<{
   (e: 'dayTime', value: string): void
 }>()
-let dayTime = computed(() => useDateFormat(props.id, 'M월 D일 HH:MM').value)
-let test = new Date(props.id)
-test.setTime(test.getTime() + 10 * 60 * 1000 * 30)
-const endTime = computed(() => useDateFormat(test, ' ~ HH:MM').value)
-let endVal = endTime.value
-let dayVal = dayTime.value
-let result = dayVal + endVal
-console.log(result)
+let dayTime = computed(() => useDateFormat(props.id, 'M월 D일 HH:mm').value)
+
+let test = dayjs(props.id).add(30, 'minute').utc().format()
+let apiRequest = dayjs(props.id).add(570, 'minute').utc().format()
+// test.setMinutes(test.getMinutes() + 30)
+onMounted(() => {
+  axios
+    .get(`/api/reservation/detail?startTime=${props.id}&endTime=${apiRequest}`)
+    .then((res) => {
+      data.value = res.data.data
+      console.log('data is ', data)
+      for (let i = 0; i < data.value.length; i++) {
+        data.value[i].startTime = data.value[i].startTime.replace('Z', '')
+        data.value[i].endTime = data.value[i].endTime.replace('Z', '')
+      }
+    })
+    .catch((err) => console.log('error is ', err))
+})
+const endTime = computed(() => useDateFormat(test, ' ~ HH:mm').value)
+let result = dayTime.value + endTime.value
 
 emit('dayTime', result)
-// watch(dayTime, (value) => {
-//   emit('dayTime', value)
-// })
 
-const editModal = ref(false)
+let editTime = ''
+
+const store = useEditStore()
+const modalStore = useModalStore()
+const { editInfo } = storeToRefs(store)
+const { editModal } = storeToRefs(modalStore)
+const inputMessage = ref({
+  purpose: '',
+  members: ['']
+})
+
 const removeModal = ref(false)
-const showEditModal = () => {
-  console.log('editModal on')
+const editToast = ref(false)
+const deleteToast = ref(false)
+
+const showEditModal = (e) => {
+  console.log('data ', data.value[e])
+
+  editInfo.value = {
+    ...data.value[e],
+    members: [...data.value[e].members]
+  }
+  let sTime = computed(
+    () =>
+      useDateFormat(
+        editInfo.value.startTime,
+        dayjs(editInfo.value.startTime).format('M/D(ddd) HH:mm')
+      ).value
+  )
+  let eTime = computed(
+    () => useDateFormat(editInfo.value.endTime, ' ~ HH:mm').value
+  )
+  editTime = sTime.value + eTime.value
   editModal.value = true
 }
+
 const showRemoveModal = () => {
-  console.log('removeModal on')
   removeModal.value = true
 }
-const editApproval = () => {
-  console.log('edit approved ')
+
+const editApproval = (e) => {
+  inputMessage.value.purpose = store.validateEdit('purpose')
+  for (let i = 0; i < editInfo.value.members.length; i++) {
+    inputMessage.value.members[i] = store.validateEdit('members', i)
+    if (inputMessage.value.members[i] !== '') {
+      return
+    }
+  }
+  if (inputMessage.value.purpose === '') {
+    axios
+      .patch(`/api/reservation/${e}`, editInfo.value)
+      .then((res) => console.log('res is ', res))
+    editModal.value = false
+    editToast.value = true
+    setTimeout(() => {
+      editToast.value = false
+    }, 1000)
+  }
 }
-const removeApproval = () => {
-  console.log('removal approved ')
+
+const cancelEdit = () => {
+  store.resetEdit()
+  inputMessage.value = {
+    purpose: '',
+    members: ['']
+  }
 }
-// const end = id.setMinutes(id.getMinutes() + 10)
+
+const removeApproval = (e) => {
+  axios
+    .delete(`/api/reservation/${e}`)
+    .then((res) => console.log(res))
+    .catch((err) => console.log('error is ', err))
+  removeModal.value = false
+  deleteToast.value = true
+  setTimeout(() => {
+    deleteToast.value = false
+  }, 1000)
+}
+
+const editAddHandler = (e) => {
+  e.preventDefault()
+  editInfo.value.members.push('')
+}
+const deleteHandler = (e) => {
+  console.log(e + 1)
+  editInfo.value.members.splice(e + 1, 1)
+}
+
+type Item = {
+  id: number
+  creator: string
+  club: 'skkuding' | 'skkud'
+  startTime: string
+  endTime: string
+  members: string[]
+  purpose: string
+}
 </script>
 
 <template>
-  <!-- <div>상세 정보 페이지 입니다 : id = {{ id }}</div> -->
   <div id="detail-page-wrapper">
     <h1 class="detail-page-title">예약 상세 정보</h1>
     <div id="list-wrapper">
       <ListItem
-        v-bind:item="{
-          id: 1,
-          creator: '김예시',
-          club: 'skkuding',
-          startTime: id,
-          endTime: id,
-          members: ['홍길동', '김철수']
+        v-for="(
+          { id, creator, club, purpose, startTime, endTime, members }, index
+        ) in data"
+        :key="index"
+        :item="{
+          id,
+          purpose,
+          creator,
+          club,
+          startTime,
+          endTime,
+          members
         }"
-        v-on:edit="showEditModal"
-        v-on:remove="showRemoveModal"
-      />
+        v-on:edit="showEditModal(index)"
+        v-on:remove="showRemoveModal(index)"
+        class="list-item"
+      ></ListItem>
     </div>
-    <Modal v-model="editModal" title="예약 정보 수정" @confirm="editApproval">
+    <Modal
+      v-model="editModal"
+      title="예약 정보 수정"
+      @confirm="editApproval(editInfo.id)"
+      @cancel="cancelEdit"
+    >
       <div class="row">
         <div>예약자 이름</div>
-        <div>김예시</div>
+        <div>{{ editInfo.creator }}</div>
       </div>
       <div class="row">
         <div>예약 시간</div>
         <div id="time">
           <IconClock id="icon-clock" />
-          날짜 적는 곳
+          {{ editTime }}
         </div>
       </div>
-      <form></form>
+      <form>
+        <div class="row">
+          <div>소속</div>
+          <RadioGroup v-model="editInfo.club" :values="store.clubs" />
+        </div>
+        <div class="row">
+          <div>모임 이름</div>
+          <TextInput
+            v-model="editInfo.purpose"
+            :message="inputMessage.purpose"
+            placeholder="모임 이름을 입력하세요"
+          />
+        </div>
+        <div class="row members">
+          <div>참가자 이름</div>
+          <div class="name-list-wrapper">
+            <div>{{ editInfo.creator }}</div>
+            <!-- <div v-for="(e, index) in editModalData.members">{{ e }}</div> -->
+            <div
+              class="member-input"
+              v-for="(e, index) in editInfo.members.filter(
+                (c) => c !== editInfo.creator
+              )"
+              :key="index"
+            >
+              <MemberTextInput
+                class="member-text-input"
+                v-model="editInfo.members[index + 1]"
+                placeholder="멤버 이름을 입력하세요"
+                :message="inputMessage.members[index + 1]"
+                @cancel="deleteHandler(index)"
+              />
+            </div>
+            <Button color="white" class="add-button" @click="editAddHandler">
+              <IconPlus class="icon" />
+              추가
+            </Button>
+          </div>
+        </div>
+      </form>
     </Modal>
     <Modal
       v-model="removeModal"
       title="예약을 삭제하시겠습니까?"
-      @confirm="removeApproval"
+      @confirm="removeApproval(editInfo.id)"
     ></Modal>
+    <Transition>
+      <Toast msg="수정이 완료되었습니다" v-if="editToast" />
+    </Transition>
+    <Transition>
+      <Toast msg="삭제가 완료되었습니다" v-if="deleteToast" />
+    </Transition>
     <div id="button-wrapper">
       <RouterLink :to="`/`">
         <Button color="red">돌아가기</Button>
@@ -104,17 +283,35 @@ const removeApproval = () => {
   height: 100%;
   padding: 2rem;
 }
+.list-item {
+  margin: 1rem 0;
+}
 .detail-page-title {
   font-size: v-bind('FONT_SIZE.title');
   font-weight: bold;
 }
+.icon {
+  font-size: v-bind('FONT_SIZE.content');
+}
+
+.v-enter-active {
+  transition: opacity 0.1s ease;
+}
+.v-leave-active {
+  transition: opacity 1s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
 .row {
   display: flex;
   flex-direction: row;
   width: 100%;
   margin: 1rem;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
 }
 .row > div:first-child {
   margin-right: 1rem;
@@ -122,13 +319,21 @@ const removeApproval = () => {
   text-align: center;
   padding: 0.2rem 0.8rem;
 }
+.member-input {
+  display: flex;
+  flex-direction: column;
+}
+.member-text-input {
+  margin: 0.3rem 0;
+}
 #time {
   border: 1px solid v-bind("COLOR['gray']");
   border-radius: 0.7rem;
-  padding: 0.2rem 0.8rem;
+  padding: 0.2rem 0.7rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 215px;
 }
 #icon-clock {
   margin-right: 0.4rem;
@@ -147,5 +352,8 @@ const removeApproval = () => {
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+}
+.add-button {
+  margin-top: 10px;
 }
 </style>
