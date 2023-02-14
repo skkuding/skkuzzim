@@ -8,92 +8,24 @@ import Modal from '@/components/Modal.vue'
 import IconChevronLeft from '~icons/fa6-solid/chevron-left'
 import IconChevronRight from '~icons/fa6-solid/chevron-right'
 import IconPlus from '~icons/fa6-solid/plus'
-import { computed, ref, watch, watchEffect } from 'vue'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
 import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
-import axios from 'axios'
+import { useReservationTable } from '@/composables/useReservationTable'
 
-const route = useRoute()
 const router = useRouter()
-const week = ref(route.query.week ? Number(route.query.week) : 0)
-const dates = computed(() => {
-  const monday = new Date()
-  const day = monday.getDay() || 7
-  monday.setDate(monday.getDate() - (day - 1) + 7 * week.value)
-  monday.setHours(9)
-  monday.setMinutes(0)
-  monday.setSeconds(0)
-  monday.setMilliseconds(0)
-  const sunday = new Date(monday)
-  sunday.setDate(sunday.getDate() + 6)
-  sunday.setHours(24)
-  return {
-    monday,
-    sunday
-  }
-})
-
-// button click event handlers
-const weekHandler = (action: 'lastWeek' | 'today' | 'nextWeek') => {
-  switch (action) {
-    case 'lastWeek':
-      router.replace(`/?week=${week.value - 1}`).then(() => {
-        week.value -= 1
-      })
-      break
-    case 'today':
-      router.replace('/?week=0').then(() => {
-        week.value = 0
-      })
-      break
-    case 'nextWeek':
-      router.replace(`/?week=${week.value + 1}`).then(() => {
-        week.value += 1
-      })
-      break
-  }
-}
+const { monday, data, weekHandler } = useReservationTable({ routing: true })
 
 // header
 const emit = defineEmits<{
   (e: 'dayTime', value: string): void
 }>()
-const dayTime = computed(
-  () => useDateFormat(dates.value.monday, 'YYYY년 M월').value
-)
+const dayTime = computed(() => useDateFormat(monday, 'YYYY년 M월').value)
 emit('dayTime', dayTime.value)
 watch(dayTime, (value) => {
   emit('dayTime', value)
-})
-
-// api request
-type Response = {
-  startTime: string
-  endTime: string
-  skkuding: number
-  skkud: number
-  isFull: boolean
-}[]
-const data = ref<Response>([])
-watchEffect(async () => {
-  const startTime = computed(() =>
-    useDateFormat(dates.value.monday, 'YYYY-MM-DD HH:mm:ss').value.replace(
-      ' ',
-      'T'
-    )
-  )
-  const endTime = computed(() =>
-    useDateFormat(dates.value.sunday, 'YYYY-MM-DD HH:mm:ss').value.replace(
-      ' ',
-      'T'
-    )
-  )
-  const response = await axios.get(
-    `/api/reservation?startTime=${startTime.value}&endTime=${endTime.value}`
-  )
-  data.value = response.data
 })
 
 // modal form
@@ -139,7 +71,7 @@ const onConfirm = () => {
         </Button>
       </div>
     </div>
-    <Table :monday="dates.monday">
+    <Table :monday="monday">
       <template
         v-for="({ startTime, skkuding, skkud, isFull }, index) in data"
         :key="index"

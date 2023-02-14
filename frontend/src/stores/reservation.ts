@@ -43,6 +43,10 @@ export const useReservationStore = defineStore('reservation', () => {
       members: []
     }
   }
+  const initializeMembers = () => {
+    return Array<string>(Number(reservation.value.memberCnt) - 1).fill('')
+  }
+
   const validate = (key: keyof State, index = 0) => {
     if (key === 'creator') {
       if (reservation.value.creator === '') {
@@ -80,7 +84,7 @@ export const useReservationStore = defineStore('reservation', () => {
     }
   }
 
-  return { reservation, clubs, reset, validate }
+  return { reservation, clubs, reset, validate, initializeMembers }
 })
 
 export const useEditStore = defineStore('edit', () => {
