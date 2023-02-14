@@ -14,6 +14,7 @@ import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
 import { useReservationTable } from '@/composables/useReservationTable'
+import { useModalStore } from '@/stores/modal'
 import { useToastMessage } from '@/stores/toastMessage'
 
 const router = useRouter()
@@ -32,6 +33,8 @@ watch(dayTime, (value) => {
 // select time
 const store = useReservationStore()
 const { reservation } = storeToRefs(store)
+const modalStore = useModalStore()
+const { editModal } = storeToRefs(modalStore)
 const selectedTime = ref({
   startTime: '',
   endTime: ''
@@ -131,10 +134,15 @@ const onClickCreateButton = async () => {
   reservation.value.endTime = selectedTime.value.endTime.replace('Z', '')
   // TODO: 시간 수정일 때와 아닐 때 로직 구분
   // 생성일 때
-  if (Number(reservation.value.memberCnt) === 1) {
-    await postReservation()
+  // 시간 수정
+  if (editModal) {
+    router.push(`/${reservation.value.startTime.split('.')[0]}`)
   } else {
-    showModal.value = true
+    if (Number(reservation.value.memberCnt) === 1) {
+      await postReservation()
+    } else {
+      showModal.value = true
+    }
   }
 }
 const onCancel = () => {

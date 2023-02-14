@@ -9,6 +9,7 @@ import { computed, onMounted, ref, type Ref } from 'vue'
 import { useDateFormat } from '@vueuse/core'
 import Toast from '@/components/Toast.vue'
 import { useEditStore } from '@/stores/reservation'
+import { RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import MemberTextInput from '@/components/MemberTextInput.vue'
 import TextInput from '@/components/TextInput.vue'
@@ -204,10 +205,12 @@ type Item = {
       </div>
       <div class="row">
         <div>예약 시간</div>
-        <div id="time">
-          <IconClock id="icon-clock" />
-          {{ editTime }}
-        </div>
+        <RouterLink :to="`/select`">
+          <div id="time">
+            <IconClock id="icon-clock" />
+            {{ editTime }}
+          </div>
+        </RouterLink>
       </div>
       <form>
         <div class="row">
