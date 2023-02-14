@@ -132,9 +132,6 @@ onBeforeMount(() => {
 const onClickCreateButton = async () => {
   reservation.value.startTime = selectedTime.value.startTime.replace('Z', '')
   reservation.value.endTime = selectedTime.value.endTime.replace('Z', '')
-  // TODO: 시간 수정일 때와 아닐 때 로직 구분
-  // 생성일 때
-  // 시간 수정
   if (editModal) {
     router.push(`/${reservation.value.startTime.split('.')[0]}`)
   } else {
