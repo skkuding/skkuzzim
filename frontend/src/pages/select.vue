@@ -132,7 +132,7 @@ onBeforeMount(() => {
 const onClickCreateButton = async () => {
   reservation.value.startTime = selectedTime.value.startTime.replace('Z', '')
   reservation.value.endTime = selectedTime.value.endTime.replace('Z', '')
-  if (editModal) {
+  if (editModal.value) {
     router.push(`/${reservation.value.startTime.split('.')[0]}`)
   } else {
     if (Number(reservation.value.memberCnt) === 1) {

@@ -23,6 +23,16 @@ import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 dayjs.locale('ko')
 
+type Item = {
+  id: number
+  creator: string
+  club: 'skkuding' | 'skkud'
+  startTime: string
+  endTime: string
+  members: string[]
+  purpose: string
+}
+
 const props = defineProps<{
   id: string
 }>()
@@ -120,9 +130,7 @@ const editApproval = (e: number) => {
     }
   }
   if (inputMessage.value.purpose === '') {
-    axios
-      .patch(`/api/reservation/${e}`, editInfo.value)
-      .then((res) => console.log('res is ', res))
+    axios.patch(`/api/reservation/${e}`, editInfo.value)
     editModal.value = false
     editToast.value = true
     setTimeout(() => {
@@ -151,22 +159,11 @@ const removeApproval = (e: number) => {
   }, 1000)
 }
 
-const editAddHandler = (e) => {
-  e.preventDefault()
+const editAddHandler = () => {
   editInfo.value.members.push('')
 }
 const deleteHandler = (e: number) => {
   editInfo.value.members.splice(e + 1, 1)
-}
-
-type Item = {
-  id: number
-  creator: string
-  club: 'skkuding' | 'skkud'
-  startTime: string
-  endTime: string
-  members: string[]
-  purpose: string
 }
 </script>
 
@@ -245,7 +242,11 @@ type Item = {
                 @cancel="deleteHandler(index)"
               />
             </div>
-            <Button color="white" class="add-button" @click="editAddHandler">
+            <Button
+              color="white"
+              class="add-button"
+              @click.prevent="editAddHandler"
+            >
               <IconPlus class="icon" />
               추가
             </Button>
