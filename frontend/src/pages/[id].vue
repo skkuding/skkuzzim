@@ -9,7 +9,8 @@ import { computed, onMounted, ref, type Ref } from 'vue'
 import { useDateFormat } from '@vueuse/core'
 import Toast from '@/components/Toast.vue'
 import { useEditStore } from '@/stores/reservation'
-import { RouterLink } from 'vue-router'
+import { useReservationStore } from '@/stores/reservation'
+import { RouterLink, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import MemberTextInput from '@/components/MemberTextInput.vue'
 import TextInput from '@/components/TextInput.vue'
@@ -22,6 +23,7 @@ import { useModalStore } from '@/stores/modal'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 dayjs.locale('ko')
+const router = useRouter()
 
 type Item = {
   id: number
@@ -65,6 +67,7 @@ let dayTime = computed(() => useDateFormat(props.id, 'M월 D일 HH:mm').value)
 
 let test = dayjs(props.id).add(30, 'minute').utc().format()
 let apiRequest = dayjs(props.id).add(570, 'minute').utc().format()
+let editTime = ref('')
 
 onMounted(() => {
   axios
@@ -77,18 +80,29 @@ onMounted(() => {
       }
     })
     .catch((err) => console.log('error is ', err))
+  let sTime = computed(
+    () =>
+      useDateFormat(
+        editInfo.value.startTime,
+        dayjs(editInfo.value.startTime).format('M/D(ddd) HH:mm')
+      ).value
+  )
+  let eTime = computed(
+    () => useDateFormat(editInfo.value.endTime, ' ~ HH:mm').value
+  )
+  editTime.value = sTime.value + eTime.value
 })
 const endTime = computed(() => useDateFormat(test, ' ~ HH:mm').value)
 let result = dayTime.value + endTime.value
 
 emit('dayTime', result)
 
-let editTime = ''
-
 const store = useEditStore()
 const modalStore = useModalStore()
+const reservationStore = useReservationStore()
 const { editInfo } = storeToRefs(store)
 const { editModal } = storeToRefs(modalStore)
+const { reservation } = storeToRefs(reservationStore)
 const inputMessage = ref({
   purpose: '',
   members: ['']
@@ -113,7 +127,7 @@ const showEditModal = (e: number) => {
   let eTime = computed(
     () => useDateFormat(editInfo.value.endTime, ' ~ HH:mm').value
   )
-  editTime = sTime.value + eTime.value
+  editTime.value = sTime.value + eTime.value
   editModal.value = true
 }
 
@@ -130,11 +144,21 @@ const editApproval = (e: number) => {
     }
   }
   if (inputMessage.value.purpose === '') {
+    editInfo.value.startTime = dayjs(editInfo.value.startTime)
+      .subtract(9, 'hour')
+      .utc()
+      .format()
+    editInfo.value.endTime = dayjs(editInfo.value.endTime)
+      .subtract(9, 'hour')
+      .utc()
+      .format()
+    console.log('editInfo is ', editInfo)
     axios.patch(`/api/reservation/${e}`, editInfo.value)
     editModal.value = false
     editToast.value = true
     setTimeout(() => {
       editToast.value = false
+      router.push(`/${editInfo.value.startTime.split('.')[0]}`)
     }, 1000)
   }
 }
@@ -163,7 +187,12 @@ const editAddHandler = () => {
   editInfo.value.members.push('')
 }
 const deleteHandler = (e: number) => {
-  editInfo.value.members.splice(e + 1, 1)
+  editInfo.value.members.splice(e, 1)
+}
+const editTimeHandler = () => {
+  reservation.value.memberCnt = editInfo.value.members.length.toString()
+  console.log(reservation.value.members)
+  router.push('/select')
 }
 </script>
 
@@ -202,12 +231,10 @@ const deleteHandler = (e: number) => {
       </div>
       <div class="row">
         <div>예약 시간</div>
-        <RouterLink :to="`/select`">
-          <div id="time">
-            <IconClock id="icon-clock" />
-            {{ editTime }}
-          </div>
-        </RouterLink>
+        <div id="time" @click="editTimeHandler()">
+          <IconClock id="icon-clock" />
+          {{ editTime }}
+        </div>
       </div>
       <form>
         <div class="row">
@@ -226,19 +253,17 @@ const deleteHandler = (e: number) => {
           <div>참가자 이름</div>
           <div class="name-list-wrapper">
             <div>{{ editInfo.creator }}</div>
-            <!-- <div v-for="(e, index) in editModalData.members">{{ e }}</div> -->
             <div
               class="member-input"
-              v-for="(e, index) in editInfo.members.filter(
-                (c) => c !== editInfo.creator
-              )"
+              v-for="(e, index) in editInfo.members.length"
               :key="index"
             >
               <MemberTextInput
                 class="member-text-input"
-                v-model="editInfo.members[index + 1]"
+                v-model="editInfo.members[index]"
+                v-if="editInfo.members[index] !== editInfo.creator"
                 placeholder="멤버 이름을 입력하세요"
-                :message="inputMessage.members[index + 1]"
+                :message="inputMessage.members[index]"
                 @cancel="deleteHandler(index)"
               />
             </div>

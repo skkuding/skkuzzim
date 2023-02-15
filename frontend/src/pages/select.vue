@@ -12,6 +12,7 @@ import { useRouter } from 'vue-router'
 import { COLOR } from '@/styles/theme'
 import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
+import { useEditStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
 import { useReservationTable } from '@/composables/useReservationTable'
 import { useModalStore } from '@/stores/modal'
@@ -33,6 +34,8 @@ watch(dayTime, (value) => {
 // select time
 const store = useReservationStore()
 const { reservation } = storeToRefs(store)
+const editStore = useEditStore()
+const { editInfo } = storeToRefs(editStore)
 const modalStore = useModalStore()
 const { editModal } = storeToRefs(modalStore)
 const selectedTime = ref({
@@ -82,7 +85,6 @@ const selectTime = (startTime: string, endTime: string) => {
       selectedTime.value.endTime = endTime
     }
   }
-  console.log(selectedTime.value.startTime, selectedTime.value.endTime) // test
 }
 
 // toast message
@@ -133,6 +135,9 @@ const onClickCreateButton = async () => {
   reservation.value.startTime = selectedTime.value.startTime.replace('Z', '')
   reservation.value.endTime = selectedTime.value.endTime.replace('Z', '')
   if (editModal.value) {
+    editInfo.value.startTime = selectedTime.value.startTime
+    editInfo.value.endTime = selectedTime.value.endTime
+    console.log(editInfo.value)
     router.push(`/${reservation.value.startTime.split('.')[0]}`)
   } else {
     if (Number(reservation.value.memberCnt) === 1) {
