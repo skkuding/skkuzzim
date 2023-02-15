@@ -70,6 +70,8 @@ let apiRequest = dayjs(props.id).add(570, 'minute').utc().format()
 let editTime = ref('')
 
 onMounted(() => {
+  console.log('test is ', test)
+  console.log('api request is ', apiRequest)
   axios
     .get(`/api/reservation/detail?startTime=${props.id}&endTime=${apiRequest}`)
     .then((res) => {
@@ -144,14 +146,14 @@ const editApproval = (e: number) => {
     }
   }
   if (inputMessage.value.purpose === '') {
-    editInfo.value.startTime = dayjs(editInfo.value.startTime)
-      .subtract(9, 'hour')
-      .utc()
-      .format()
-    editInfo.value.endTime = dayjs(editInfo.value.endTime)
-      .subtract(9, 'hour')
-      .utc()
-      .format()
+    // editInfo.value.startTime = dayjs(editInfo.value.startTime)
+    //   .subtract(9, 'hour')
+    //   .utc()
+    //   .format()
+    // editInfo.value.endTime = dayjs(editInfo.value.endTime)
+    //   .subtract(9, 'hour')
+    //   .utc()
+    //   .format()
     console.log('editInfo is ', editInfo)
     axios.patch(`/api/reservation/${e}`, editInfo.value)
     editModal.value = false
