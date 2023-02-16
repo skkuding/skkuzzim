@@ -62,15 +62,16 @@ let data = ref<Item[]>([
 const emit = defineEmits<{
   (e: 'dayTime', value: string): void
 }>()
-let dayTime = computed(() => useDateFormat(props.id, 'M월 D일 HH:mm').value)
+const dayTime = computed(() => useDateFormat(props.id, 'M월 D일 HH:mm').value)
 
-let test = dayjs(props.id).add(30, 'minute').utc().format()
-let apiRequest = dayjs(props.id).add(570, 'minute').utc().format()
-let editTime = ref('')
+const test = dayjs(props.id).add(30, 'minute').utc().format()
+const apiRequest = dayjs(props.id).add(570, 'minute').utc().format()
+const editTime = ref('')
+const overCapacity = ref(false)
 
 onMounted(() => {
   axios
-    .get(`/api/reservation/detail?startTime=${props.id}&endTime=${apiRequest}`)
+    .get(`/api/reservation/detail?startTime=${props.id}Z&endTime=${apiRequest}`)
     .then((res) => {
       data.value = res.data.data
       for (let i = 0; i < data.value.length; i++) {
@@ -78,21 +79,20 @@ onMounted(() => {
         data.value[i].endTime = data.value[i].endTime.replace('Z', '')
       }
     })
-    .catch((err) => console.log('error is ', err))
-  let sTime = computed(
+  const sTime = computed(
     () =>
       useDateFormat(
         editInfo.value.startTime,
         dayjs(editInfo.value.startTime).format('M/D(ddd) HH:mm')
       ).value
   )
-  let eTime = computed(
+  const eTime = computed(
     () => useDateFormat(editInfo.value.endTime, ' ~ HH:mm').value
   )
   editTime.value = sTime.value + eTime.value
 })
 const endTime = computed(() => useDateFormat(test, ' ~ HH:mm').value)
-let result = dayTime.value + endTime.value
+const result = dayTime.value + endTime.value
 
 emit('dayTime', result)
 
@@ -116,17 +116,17 @@ const showEditModal = (e: number) => {
     ...data.value[e],
     members: [...data.value[e].members]
   }
-  let sTime = computed(
+  const stTime = computed(
     () =>
       useDateFormat(
         editInfo.value.startTime,
         dayjs(editInfo.value.startTime).format('M/D(ddd) HH:mm')
       ).value
   )
-  let eTime = computed(
+  const enTime = computed(
     () => useDateFormat(editInfo.value.endTime, ' ~ HH:mm').value
   )
-  editTime.value = sTime.value + eTime.value
+  editTime.value = stTime.value + enTime.value
   editModal.value = true
 }
 
@@ -160,8 +160,7 @@ const editApproval = (e: number) => {
       })
       .catch((err) => {
         if (err.response.data.message === '정원 초과!') {
-          inputMessage.value.members[inputMessage.value.members.length - 1] =
-            '해당 시간대의 예약 가능 인원 초과'
+          overCapacity.value = true
         }
       })
   }
@@ -179,6 +178,7 @@ const removeApproval = (e: number) => {
   axios.delete(`/api/reservation/${e}`)
   removeModal.value = false
   deleteToast.value = true
+  router.go(0)
   setTimeout(() => {
     deleteToast.value = false
   }, 1000)
@@ -278,6 +278,9 @@ const editTimeHandler = () => {
           </div>
         </div>
       </form>
+      <div class="error-message" v-if="overCapacity">
+        해당 시간대의 예약 가능 인원 초과
+      </div>
     </Modal>
     <Modal
       v-model="removeModal"
@@ -362,6 +365,12 @@ const editTimeHandler = () => {
 }
 #icon-clock {
   margin-right: 0.4rem;
+}
+.error-message {
+  color: v-bind("COLOR['red']");
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 1rem;
 }
 
 #list-wrapper {
