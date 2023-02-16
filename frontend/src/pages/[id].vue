@@ -2,10 +2,9 @@
 import Button from '@/components/Button.vue'
 import ListItem from '@/components/ListItem.vue'
 import Modal from '@/components/Modal.vue'
-// import MyComponent from '@/components/MyComponent.vue'
 import { FONT_SIZE, COLOR } from '@/styles/theme'
 import IconClock from '~icons/fa6-regular/clock'
-import { computed, onMounted, ref, type Ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useDateFormat } from '@vueuse/core'
 import Toast from '@/components/Toast.vue'
 import { useEditStore } from '@/stores/reservation'
@@ -151,6 +150,7 @@ const editApproval = (e: number) => {
     axios.patch(`/api/reservation/${e}`, editInfo.value)
     editModal.value = false
     editToast.value = true
+    router.go(0)
     setTimeout(() => {
       editToast.value = false
       router.push(`/${editInfo.value.startTime.split('.')[0]}`)
@@ -186,7 +186,6 @@ const deleteHandler = (e: number) => {
 }
 const editTimeHandler = () => {
   reservation.value.memberCnt = editInfo.value.members.length.toString()
-  console.log(reservation.value.members)
   router.push('/select')
 }
 </script>

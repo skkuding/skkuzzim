@@ -135,8 +135,8 @@ const onClickCreateButton = async () => {
   reservation.value.startTime = selectedTime.value.startTime.replace('Z', '')
   reservation.value.endTime = selectedTime.value.endTime.replace('Z', '')
   if (editModal.value) {
-    editInfo.value.startTime = selectedTime.value.startTime
-    editInfo.value.endTime = selectedTime.value.endTime
+    editInfo.value.startTime = reservation.value.startTime
+    editInfo.value.endTime = reservation.value.endTime
     console.log(editInfo.value)
     router.push(`/${reservation.value.startTime.split('.')[0]}`)
   } else {
