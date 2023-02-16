@@ -17,6 +17,7 @@ import { storeToRefs } from 'pinia'
 import { useReservationTable } from '@/composables/useReservationTable'
 import { useModalStore } from '@/stores/modal'
 import { useToastMessage } from '@/stores/toastMessage'
+import dayjs from 'dayjs'
 
 const router = useRouter()
 const { monday, data, weekHandler } = useReservationTable({ routing: false })
@@ -132,8 +133,12 @@ onBeforeMount(() => {
   }
 })
 const onClickCreateButton = async () => {
-  reservation.value.startTime = selectedTime.value.startTime.replace('Z', '')
-  reservation.value.endTime = selectedTime.value.endTime.replace('Z', '')
+  reservation.value.startTime = dayjs(selectedTime.value.startTime)
+    .toISOString()
+    .replace('Z', '')
+  reservation.value.endTime = dayjs(selectedTime.value.endTime)
+    .toISOString()
+    .replace('Z', '')
   if (editModal.value) {
     editInfo.value.startTime = reservation.value.startTime
     editInfo.value.endTime = reservation.value.endTime
