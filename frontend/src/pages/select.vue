@@ -137,8 +137,7 @@ const onClickCreateButton = async () => {
   if (editModal.value) {
     editInfo.value.startTime = reservation.value.startTime
     editInfo.value.endTime = reservation.value.endTime
-    console.log(editInfo.value)
-    router.push(`/${reservation.value.startTime.split('.')[0]}`)
+    router.go(-1)
   } else {
     if (Number(reservation.value.memberCnt) === 1) {
       await postReservation()

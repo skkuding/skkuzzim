@@ -147,14 +147,23 @@ const editApproval = (e: number) => {
     }
   }
   if (inputMessage.value.purpose === '') {
-    axios.patch(`/api/reservation/${e}`, editInfo.value)
-    editModal.value = false
-    editToast.value = true
-    router.go(0)
-    setTimeout(() => {
-      editToast.value = false
-      router.push(`/${editInfo.value.startTime.split('.')[0]}`)
-    }, 1000)
+    axios
+      .patch(`/api/reservation/${e}`, editInfo.value)
+      .then(() => {
+        editModal.value = false
+        editToast.value = true
+        router.go(0)
+        setTimeout(() => {
+          editToast.value = false
+          router.push(`/${editInfo.value.startTime.split('.')[0]}`)
+        }, 1000)
+      })
+      .catch((err) => {
+        if (err.response.data.message === '정원 초과!') {
+          inputMessage.value.members[inputMessage.value.members.length - 1] =
+            '해당 시간대의 예약 가능 인원 초과'
+        }
+      })
   }
 }
 
@@ -167,10 +176,7 @@ const cancelEdit = () => {
 }
 
 const removeApproval = (e: number) => {
-  axios
-    .delete(`/api/reservation/${e}`)
-    .then((res) => console.log(res))
-    .catch((err) => console.log('error is ', err))
+  axios.delete(`/api/reservation/${e}`)
   removeModal.value = false
   deleteToast.value = true
   setTimeout(() => {
