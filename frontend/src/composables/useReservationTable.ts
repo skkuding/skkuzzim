@@ -49,10 +49,14 @@ export const useReservationTable = (option: { routing: boolean }) => {
   const data = ref<Response>([])
   watchEffect(async () => {
     const startTime = ref(
-      useDateFormat(monday, 'YYYY-MM-DD HH:mm:ss').value.replace(' ', 'T')
+      useDateFormat(monday, 'YYYY-MM-DD HH:mm:ss')
+        .value.replace(' ', 'T')
+        .concat('Z')
     )
     const endTime = ref(
-      useDateFormat(sunday, 'YYYY-MM-DD HH:mm:ss').value.replace(' ', 'T')
+      useDateFormat(sunday, 'YYYY-MM-DD HH:mm:ss')
+        .value.replace(' ', 'T')
+        .concat('Z')
     )
     const response = await axios.get(
       `/api/reservation?startTime=${startTime.value}&endTime=${endTime.value}`

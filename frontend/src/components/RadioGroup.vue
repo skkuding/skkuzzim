@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import IconCircle from "~icons/fa6-regular/circle";
-import IconCircleDot from "~icons/fa6-regular/circle-dot";
+import { computed } from 'vue'
+import IconCircle from '~icons/fa6-regular/circle'
+import IconCircleDot from '~icons/fa6-regular/circle-dot'
 
 const props = defineProps<{
-  values: string[];
-  modelValue: string;
-}>();
+  values: string[]
+  modelValue: string
+}>()
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: string): void;
-}>();
+  (e: 'update:modelValue', value: string): void
+}>()
 
 const model = computed({
   get() {
-    return props.modelValue;
+    return props.modelValue
   },
   set(value) {
-    emit("update:modelValue", value);
-  },
-});
+    emit('update:modelValue', value)
+  }
+})
 </script>
 
 <template>

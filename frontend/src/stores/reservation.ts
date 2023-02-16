@@ -11,6 +11,16 @@ interface State {
   members: string[]
 }
 
+interface EditInfo {
+  id: number
+  creator: string
+  club: 'skkuding' | 'skkud'
+  purpose: string
+  members: string[]
+  startTime: string
+  endTime: string
+}
+
 export const useReservationStore = defineStore('reservation', () => {
   const clubs = ['SKKUDING', 'SKKU.D']
   const reservation = ref<State>({
@@ -75,4 +85,48 @@ export const useReservationStore = defineStore('reservation', () => {
   }
 
   return { reservation, clubs, reset, validate, initializeMembers }
+})
+
+export const useEditStore = defineStore('edit', () => {
+  // const date = new Date()
+  const clubs = ['skkuding', 'skkud']
+  const editInfo = ref<EditInfo>({
+    id: 0,
+    club: 'skkuding',
+    startTime: '',
+    endTime: '',
+    purpose: '',
+    creator: '',
+    members: []
+  })
+  const resetEdit = () => {
+    editInfo.value = {
+      id: 0,
+      club: 'skkuding',
+      startTime: '',
+      endTime: '',
+      creator: '',
+      purpose: '',
+      members: []
+    }
+  }
+  const validateEdit = (key: keyof EditInfo, index = 0) => {
+    if (key === 'purpose') {
+      if (editInfo.value.purpose === '') {
+        return '모임 이름을 입력해주세요'
+      } else {
+        return ''
+      }
+    } else if (key === 'members') {
+      if (editInfo.value.members[index] === '') {
+        return '참가자 이름을 입력해주세요'
+      } else {
+        return ''
+      }
+    } else {
+      return ''
+    }
+  }
+
+  return { editInfo, clubs, resetEdit, validateEdit }
 })

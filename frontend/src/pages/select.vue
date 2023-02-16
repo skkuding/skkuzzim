@@ -12,9 +12,12 @@ import { useRouter } from 'vue-router'
 import { COLOR } from '@/styles/theme'
 import { useDateFormat } from '@vueuse/core'
 import { useReservationStore } from '@/stores/reservation'
+import { useEditStore } from '@/stores/reservation'
 import { storeToRefs } from 'pinia'
 import { useReservationTable } from '@/composables/useReservationTable'
+import { useModalStore } from '@/stores/modal'
 import { useToastMessage } from '@/stores/toastMessage'
+import dayjs from 'dayjs'
 
 const router = useRouter()
 const { monday, data, weekHandler } = useReservationTable({ routing: false })
@@ -32,6 +35,10 @@ watch(dayTime, (value) => {
 // select time
 const store = useReservationStore()
 const { reservation } = storeToRefs(store)
+const editStore = useEditStore()
+const { editInfo } = storeToRefs(editStore)
+const modalStore = useModalStore()
+const { editModal } = storeToRefs(modalStore)
 const selectedTime = ref({
   startTime: '',
   endTime: ''
@@ -79,7 +86,6 @@ const selectTime = (startTime: string, endTime: string) => {
       selectedTime.value.endTime = endTime
     }
   }
-  console.log(selectedTime.value.startTime, selectedTime.value.endTime) // test
 }
 
 // toast message
@@ -127,14 +133,22 @@ onBeforeMount(() => {
   }
 })
 const onClickCreateButton = async () => {
-  reservation.value.startTime = selectedTime.value.startTime.replace('Z', '')
-  reservation.value.endTime = selectedTime.value.endTime.replace('Z', '')
-  // TODO: 시간 수정일 때와 아닐 때 로직 구분
-  // 생성일 때
-  if (Number(reservation.value.memberCnt) === 1) {
-    await postReservation()
+  reservation.value.startTime = dayjs(selectedTime.value.startTime)
+    .toISOString()
+    .replace('Z', '')
+  reservation.value.endTime = dayjs(selectedTime.value.endTime)
+    .toISOString()
+    .replace('Z', '')
+  if (editModal.value) {
+    editInfo.value.startTime = reservation.value.startTime
+    editInfo.value.endTime = reservation.value.endTime
+    router.go(-1)
   } else {
-    showModal.value = true
+    if (Number(reservation.value.memberCnt) === 1) {
+      await postReservation()
+    } else {
+      showModal.value = true
+    }
   }
 }
 const onCancel = () => {
