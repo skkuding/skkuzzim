@@ -38,26 +38,7 @@ const props = defineProps<{
   id: string
 }>()
 
-let data = ref<Item[]>([
-  {
-    id: 0,
-    creator: '김예시',
-    purpose: 'SKKUDING 개발 회의',
-    club: 'skkuding',
-    startTime: '',
-    endTime: '',
-    members: ['김예시', '홍길동', '김철수']
-  },
-  {
-    id: 1,
-    creator: '강금비',
-    purpose: '토이 프로젝트',
-    startTime: '',
-    endTime: '',
-    club: 'skkud',
-    members: ['강금비', '조무지']
-  }
-])
+let data = ref<Item[]>([])
 // header
 const emit = defineEmits<{
   (e: 'dayTime', value: string): void
