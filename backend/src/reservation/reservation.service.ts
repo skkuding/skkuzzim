@@ -140,10 +140,12 @@ export class ReservationService {
 
     // check startTime and endTime (30분 단위)
     // add 9 hours to support korean timezone
-    const startTimeDate = new Date(
-      new Date(startTime).getTime() + 9 * 3600 * 1000
-    )
-    const endTimeDate = new Date(new Date(endTime).getTime() + 9 * 3600 * 1000)
+    // const startTimeDate = new Date(
+    //   new Date(startTime).getTime() + 9 * 3600 * 1000
+    // )
+    // const endTimeDate = new Date(new Date(endTime).getTime() + 9 * 3600 * 1000)
+    const startTimeDate = new Date(startTime)
+    const endTimeDate = new Date(endTime)
 
     if (
       (startTimeDate.getMinutes() !== 30 && startTimeDate.getMinutes() !== 0) ||
@@ -311,10 +313,12 @@ export class ReservationService {
 
     //check startTime and endTime
     // add 9 hours to support korean timezone
-    const startTimeDate = new Date(
-      new Date(startTime).getTime() + 9 * 3600 * 1000
-    )
-    const endTimeDate = new Date(new Date(endTime).getTime() + 9 * 3600 * 1000)
+    // const startTimeDate = new Date(
+    //   new Date(startTime).getTime() + 9 * 3600 * 1000
+    // )
+    // const endTimeDate = new Date(new Date(endTime).getTime() + 9 * 3600 * 1000)
+    const startTimeDate = new Date(startTime)
+    const endTimeDate = new Date(endTime)
     const maxMember = 8
 
     if (
