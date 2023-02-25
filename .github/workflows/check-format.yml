@@ -1,0 +1,35 @@
+name: Check the source code
+run-name: Check ${{ github.actor }}'s commit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: check format of the code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependency
+        run: pnpm install --ignore-scripts
+
+      - name: Check Backend Lint
+        working-directory: ./backend
+        run: pnpm lint
+
+      - name: Check Backend Style
+        working-directory: ./backend
+        run: pnpm format
+#      - name: Check Frontend Lint
+#        working-directory: ./frontend
+#        run: pnpm lint
